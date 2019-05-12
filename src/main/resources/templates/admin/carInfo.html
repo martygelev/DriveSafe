@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Car Info</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/navBars.css">
+    <link rel="stylesheet" href="/css/animate.css">
+    <link rel="stylesheet" href="/css/popups.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+
+        button#editCarBtnPOP {
+            margin-left: 32px;
+            margin-top: 22px;
+        }
+
+    </style>
+
+</head>
+<body>
+<div id="page">
+    <div class="d-flex" id="wrapper">
+        <div th:insert="fragments/sidebar.html :: sidebar"></div>
+        <div id="page-content-wrapper">
+            <div th:insert="fragments/header.html :: header"></div>
+            <div id="carInfoHolder" style="margin: 10px">
+                <button type="button" class="btn btn-info btn-lg center-block editCarPopUp_open"
+                        id="editCarBtnPOP">Edit Car
+                </button>
+
+                <div class="container row">
+                    <div class="col-6">
+                        <div class="header clearfix d-flex flex-column align-items-center">
+                            <h2 style="background-color: #00ee99">Car Info</h2>
+                        </div>
+                        <div class="detail clearfix">
+                            <ul class="list-group list-group-flush">
+                                <a href=""
+                                   class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                    Make:
+                                    <span class="badge badge-light badge-pill"><p
+                                            th:text="${car.getModel().getManufacturer().getName() }"></p></span>
+                                </a>
+                                <a href=""
+                                   class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                    Model:
+                                    <span class="badge badge-light badge-pill" id="model"><p
+                                            th:text="${car.getModel().getName()}"></p></span>
+                                </a>
+                                <a href=""
+                                   class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                    Vin:
+                                    <span id="vin" class="badge badge-light badge-pill">
+        <p th:text="${car.getVin()}"></p></span>
+                                </a>
+                                <a href=""
+                                   class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                    License Plate:
+                                    <span class="badge badge-light badge-pill" id="licensePlate"> <p
+                                            th:text="${car.getLicensePlate()}"></p></span>
+                                </a>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="header clearfix d-flex flex-column align-items-center">
+                            <h2 style="background-color: #00ee99">Owner</h2>
+                        </div>
+                        <div class="detail clearfix">
+                            <ul class="list-group list-group-flush">
+                                <a href=""
+                                   class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                    Name:
+                                    <span class="badge badge-light badge-pill"><p
+                                            th:text="${customer.getName()}"></p></span>
+                                </a>
+                                <a href=""
+                                   class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                    Email:
+                                    <span class="badge badge-light badge-pill" id="email"><p
+                                            th:text="${customer.getEmail()}"></p></span>
+                                </a>
+                                <a href=""
+                                   class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                    Phone Number:
+                                    <span id="phoneNumberC" class="badge badge-light badge-pill">
+        <p th:text="${customer.getPhone()}"></p></span>
+                                </a>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row justify-content-around mt-3 mb-3">
+                    <div id="eventsOnThisCar">
+                        Last 3 Events
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<div th:insert="fragments/footer.html :: footer"></div>
+<div th:insert="fragments/popups.html :: editCarPopUp"></div>
+<script src="/js/jquery-3.4.0.min.js"></script>
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-popup-overlay/2.1.1/jquery.popupoverlay.min.js"></script>
+<script type="module" src="/js/popups.js"></script>
+<script src="/js/bootstrap-notify.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+        // $('#editCarPopUp').popup({
+        //     transition: 'all 0.3s'
+        // });
+
+        $('#editCarPopUp').popup({
+            onopen: function () {
+                const vin = $('#vinChange');
+                let licensePlate = $('#plateChange');
+
+
+                $('#updateCar').click(function () {
+                    let pathname = window.location.pathname;
+                    let n = pathname.lastIndexOf('/');
+                    let id = pathname.substring(n + 1);
+
+                    $.ajax({
+                        url: '/car/update/' + id + '/' + vin.val() + '/' + licensePlate.val(),
+                        type: 'PUT',
+                        success: function () {
+                            $.ajax({
+                                url: '/service/'
+                            })
+                        },
+                        error: function () {
+                            alert("@@!!!#&!@!#&#@&!#&@#@&@#&")
+                        }
+                    })
+                });
+            }
+        });
+
+        let pathname = window.location.pathname;
+        let n = pathname.lastIndexOf('/');
+        let id = pathname.substring(n + 1);
+
+        let services = $.parseJSON($.ajax({
+            url: '/car/services/' + id,
+            dataType: 'json',
+            async: false
+        }).responseText);
+
+
+        let i = 0;
+            $.each(services, function () {
+                $('#eventsOnThisCar').append("<div>" + services[0].date.substr(0, 10) + " |" + services[i].detailedRepairServices[i].repairService.name);
+                $('#eventsOnThisCar').append("<div>" + services[1].date.substr(0, 10) + " |" + services[i].detailedRepairServices[i].repairService.name);
+                $('#eventsOnThisCar').append("<div>" + services[2].date.substr(0, 10) + " |" + services[i].detailedRepairServices[i].repairService.name);
+                i++;
+            });
+
+
+
+    })
+</script>
+
+</body>
+</html>

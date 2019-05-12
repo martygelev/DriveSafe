@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../../static/css/navBars.css" th:href="@{/css/navBars.css}">
+</head>
+<body>
+<!--<div th:fragment="newCar" class="assignNewCarPopup">-->
+<!--    <form class="form-signin" role="form" form method="POST" enctype="multipart/form-data" action="/cars/newCar"-->
+<!--          th:object="${car}">-->
+
+
+<!--        <div class="col-sm-6">-->
+<!--            <div class="input-group mb-3">-->
+<!--                <div class="input-group-prepend">-->
+<!--                    <label class="input-group-text" for="customerSelect">Customer</label>-->
+<!--                </div>-->
+<!--                <select class="custom-select" id="customerSelect">-->
+<!--                    <option selected hidden disabled>Choose a customer</option>-->
+<!--                </select>-->
+<!--            </div>-->
+<!--        </div>-->
+
+
+<!--        <div class="col-sm-6">-->
+<!--            <div class="input-group mb-3">-->
+<!--                <div class="input-group-prepend">-->
+<!--                    <label class="input-group-text" for="makeSelect">Make</label>-->
+<!--                </div>-->
+<!--                <select class="makeSelect" id="makeSelect">-->
+<!--                    <option selected hidden disabled>Choose a make</option>-->
+<!--                </select>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <div class="col-sm-6">-->
+<!--            <div class="input-group mb-3">-->
+<!--                <div class="input-group-prepend">-->
+<!--                    <label class="input-group-text" for="modelSelect">Model</label>-->
+<!--                </div>-->
+<!--                <select class="modelSelect" id="modelSelect">-->
+<!--                    <option selected hidden disabled>Choose a model</option>-->
+<!--                </select>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <div class="form-row">-->
+<!--            <div class="col">-->
+<!--                <div class="form-label-group">-->
+<!--                    <label for="vin"></label><textarea th:field="*{vin}" id="vin"-->
+<!--                                                       class="form-control" placeholder="vin"></textarea>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <div class="form-row">-->
+
+<!--            <div class="col">-->
+<!--                <div class="input-group mb-3">-->
+<!--                    <label for="licensePlate"></label><input type="text" th:field="*{licensePlate}" id="licensePlate"-->
+<!--                                                             class="form-control" placeholder="licensePlate">-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <button id="registerBtn" class="btn btn-lg btn-primary btn-block shadow-none text-uppercase"-->
+<!--                type="submit">-->
+<!--            Create-->
+<!--        </button>-->
+<!--    </form>-->
+<!--</div>-->
+<script src="/js/jquery-3.4.0.min.js"></script>
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script>
+    $(document).ready(
+        function () {
+
+            let customerSelect = $("#customerSelect");
+            let makeSelect = $("#makeSelect");
+            let modelSelect = $("#modelSelect");
+
+            console.log(customerSelect.val());
+            console.log(makeSelect.val());
+            console.log(modelSelect.val());
+
+            fillCustomers();
+            fillMake();
+            fillModel();
+
+
+            function fillCustomers() {
+                let customers = $.parseJSON($.ajax({
+                    url: '/r-customers/get',
+                    dataType: "json",
+                    async: false
+                }).responseText);
+
+                console.log(customers);
+
+                $.each(customers, function () {
+                    customerSelect.append($("<option />").val(this.id).text(this.name));
+                });
+            }
+
+            function fillMake() {
+                let make = $.parseJSON($.ajax({
+                    url: '/make',
+                    dataType: 'json',
+                    async: false
+                }).responseText);
+
+                console.log(make);
+
+                $.each(make, function () {
+                    makeSelect.append($("<option/>").val(this.id).text(this.name));
+                })
+            }
+
+            function fillModel() {
+                let model = $.parseJSON($.ajax({
+                    url: '/model',
+                    dataType: 'json',
+                    async: false
+                }).responseText);
+
+                console.log(model);
+
+                $.each(model, function () {
+                    modelSelect.append($("<option/>").val(this.id).text(this.name));
+                })
+            }
+
+            customerSelect.change(function () {
+                if (customerSelect.val() !== null) {
+                    let customerCars = $.parseJSON($.ajax({
+                        url: '/customer-cars/' + customerSelect.val(),
+                        dataType: "json",
+                        async: false
+                    }).responseText);
+
+                    // console.log(customerCars);
+
+                    carSelect.find('option').remove().end();
+
+                    $.each(customerCars, function () {
+                        let carText = this.car.model.manufacturer.name + ', ' + this.car.model.name + ', ' + this.car.model.year.substr(0, 4) + ', ' + this.car.licensePlate;
+                        carSelect.append($("<option />").val(this.id).text(carText));
+                    });
+
+                }
+                console.log(makeSelect.val());
+                console.log(modelSelect.val());
+                console.log(customerSelect.val());
+            });
+        }
+    )
+</script>
+</body>
+</html>

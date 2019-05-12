@@ -1,0 +1,46 @@
+
+html, body {
+    font-family: 'Montserrat', sans-serif;
+}
+footer {
+    position: fixed;
+    height: 50px;
+    bottom: 0;
+    width: 100%;
+    background-color: #ccc
+}
+
+footer p {
+    padding: 15px;
+}
+form input {
+    background: #f0f0f0;
+
+    border: none;
+    border-left: 2px solid #fff;
+
+    font-size: 36px;
+    padding: 20px;
+    width: 100%;
+
+    transition: background 2s, border-left 2s;
+}
+
+.btn {
+    background: transparent;
+    border: none;
+
+    color: #00f28f;
+    cursor: pointer;
+
+    font-size: 36px;
+
+    padding: 20px 24px;
+
+    transition: background 2s, color 2s;
+}
+
+.btn:hover {
+    background: #00f28f;
+    color: #fff;
+}

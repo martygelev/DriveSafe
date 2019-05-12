@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="../../static/css/main.css" th:href="@{/css/main.css}">
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+          integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        #customers::before {
+            content: "\f0c0";
+            display: block;
+            font-family: "FontAwesome", serif;
+            width: 20px;
+            height: 20px;
+            float: left;
+            margin: 0 6px 0 0;
+        }
+
+        #services::before {
+            content: "\f085";
+            display: block;
+            font-family: "FontAwesome", serif;
+            width: 20px;
+            height: 20px;
+            float: left;
+            margin: 0 6px 0 0;
+        }
+
+        #cars::before {
+            content: "\f5e4";
+            display: block;
+            font-family: "FontAwesome 5 Free", serif;
+            font-weight: 900;
+            width: 20px;
+            height: 20px;
+            float: left;
+            margin: 0 6px 0 0;
+        }
+
+        #dashboard::before {
+            content: "\f015";
+            display: block;
+            font-family: "FontAwesome", serif;
+            width: 20px;
+            height: 20px;
+            float: left;
+            margin: 0 6px 0 0;
+        }
+    </style>
+</head>
+<body>
+
+<div th:fragment="sidebar">
+    <div class="border-right" id="sidebar-wrapper">
+        <div class="sidebar-heading">DriveSafe Car Service</div>
+        <div class="list-group list-group-flush">
+            <a href="#" class="list-group-item list-group-item-action" id="dashboard">Dashboard</a>
+            <a href="/event" class="list-group-item list-group-item-action" id="newEvent">Create new event</a>
+            <a href="/customers" class="list-group-item list-group-item-action" id="customers">Customers</a>
+            <a href="/service" class="list-group-item list-group-item-action" id="services">Services</a>
+            <a href="/cars" class="list-group-item list-group-item-action" id="cars">Cars</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

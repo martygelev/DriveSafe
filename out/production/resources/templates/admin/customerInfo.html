@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+
+
+        .card {
+            margin-left: 2px;
+            margin-top: 2px;
+            margin-bottom: 2px;
+            margin-right: 2px;
+            border-radius: 5px;
+        }
+
+        .card-body {
+            flex: 1 1 auto;
+            padding: .25rem;
+            margin-left: 26px;
+            margin-right: 23px;
+            margin-bottom: 5px;
+
+        }
+
+        div#closeCarDivId {
+            font-size: 1.7rem;
+            font-family: fantasy;
+            color: red;
+            margin-left: 242px;
+            margin-right: -16px;
+            -webkit-appearance: button-bevel;
+        }
+
+        #closeCar {
+            padding: inherit;
+            margin: 2px;
+            margin-left: 243px;
+        }
+
+        div.mainContent {
+            margin-left: 133px;
+            position: absolute;
+            top: 154px;
+            left: 611px;
+            right: 60px;
+            bottom: 1px;
+        }
+
+        button#newCar {
+            margin-left: 16px;
+            margin-top: 11px;
+        }
+
+        button#editCustomer{
+            margin-left: 37px;
+            margin-top: 11px;
+        }
+
+        div#customerInfoDiv {
+            margin-left: 35px;
+            /* margin-right: 1211px; */
+        }
+    </style>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/navBars.css">
+    <link rel="stylesheet" href="/css/animate.css">
+    <link rel="stylesheet" href="/css/popups.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<div id="page">
+    <div class="d-flex" id="wrapper">
+
+        <div th:insert="fragments/sidebar.html :: sidebar"></div>
+
+        <div id="page-content-wrapper">
+
+            <div th:insert="fragments/header.html :: header"></div>
+
+            <button type="button" class="btn btn-info btn-lg center-block editCustomerPopUp_open" data-toggle="modal"
+                    data-target="#mymodal" id="editCustomer">Edit Customer Info
+            </button>
+
+            <button type="button" class="btn btn-info btn-lg center-block newCarPopUp_open" data-toggle="modal"
+                    data-target="#mymodal" id="newCar">New Car
+            </button>
+
+            <div id="customerInfoDiv">
+                <br/>
+                Name: <p th:text="${customer.name}"></p>
+                <br/>
+                Phone number: <p th:text="${customer.phone}"></p>
+                <br/>
+                Email <p th:text="${customer.email}"></p>
+            </div>
+            <br/>
+            <br/>
+
+
+            <div class="mainContent">
+                <div th:each="car : ${cars}">
+                    <div th:insert="fragments/carCard.html
+                :: card(id=${car.getCar().getId()},make = ${car.getCar().getModel().getManufacturer().getName()},model=${car.getCar().getModel().getName()},
+                vin=${car.getCar().getVin()}, licensePlate=${car.getCar().getLicensePlate()})"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:insert="fragments/footer.html :: footer"></div>
+<div th:insert="fragments/popups.html :: newCarPopUp"></div>
+<div th:insert="fragments/popups.html :: editCustomerPopUp"></div>
+
+<script src="/js/jquery-3.4.0.min.js"></script>
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-popup-overlay/2.1.1/jquery.popupoverlay.min.js"></script>
+<script type="module" src="/js/popups.js"></script>
+<script src="/js/bootstrap-notify.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $('#newCarPopUp').popup({
+            onopen: function () {
+                let makeSelect = $("#makeSelect");
+                let modelSelect = $("#modelSelect");
+                let vin = $("#vin");
+                let licensePlate = $("#licensePlate");
+
+                fillMake();
+
+                function fillMake() {
+                    let make = $.parseJSON($.ajax({
+                        url: '/make',
+                        dataType: 'json',
+                        async: false
+                    }).responseText);
+
+                    console.log(make);
+
+                    $.each(make, function () {
+                        makeSelect.append($("<option/>").val(this.name).text(this.name));
+                    })
+                }
+
+                makeSelect.change(function () {
+                    modelSelect.empty();
+
+                    let model = $.parseJSON($.ajax({
+                        url: '/model/' + makeSelect.val(),
+                        dataType: 'json',
+                        async: false
+                    }).responseText);
+
+                    console.log(model);
+
+                    $.each(model, function () {
+                        modelSelect.append($("<option/>").val(this.id).text(this.name));
+                    })
+                });
+
+                $.urlParam = function (name) {
+                    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+                    if (results == null) {
+                        return null;
+                    }
+                    return decodeURI(results[1]) || 0;
+                };
+
+                $('#createCarBtnSave').click(function () {
+                    let $make = $('#makeSelect');
+                    let $model = $('#modelSelect');
+                    let $vin = $('#vin');
+                    let $licensePlate = $('#licensePlate');
+
+                    let reg = {
+                        model: $model.val(),
+                        vin: $vin.val(),
+                        licensePlate: $licensePlate.val()
+                    };
+                    let pathname = window.location.pathname;
+                    let n = pathname.lastIndexOf('/');
+                    let id = pathname.substring(n + 1);
+
+
+                    console.log(reg);
+                    console.log(id);
+                    $.ajax({
+                        url: '/car/prepare/' + id + '/' + $model.val() + '/' + $vin.val() + '/' + $licensePlate.val(),
+                        data: reg,
+                        type: 'POST',
+                        success: function () {
+                            $.ajax({
+                                url: '/customers/' + id
+                            })
+                        },
+                        error: function () {
+                            alert("@@!!!#&!@!#&#@&!#&@#@&@#&")
+                        }
+                    });
+
+                });
+
+            }
+        });
+
+        $('#closeCar').click(function () {
+            let pathname = window.location.pathname;
+            let n = pathname.lastIndexOf('/');
+            let id = pathname.substring(n + 1);
+            $.ajax({
+                url: '/car/delete/' + id,
+                type: 'DELETE',
+                success: function () {
+                    $.ajax({
+                        url: '/customers/' + id
+                    })
+                },
+                error: function () {
+                    alert("@@!!!#&!@!#&#@&!#&@#@&@#&")
+                }
+            });
+        })
+
+
+
+    })
+</script>
+</body>
+
+</html>

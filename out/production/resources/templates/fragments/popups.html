@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/navBars.css">
+    <link rel="stylesheet" href="/css/animate.css">
+    <link rel="stylesheet" href="/css/popups.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+
+    </style>
+</head>
+<body>
+
+<div th:fragment="newCarPopUp">
+    <div id="newCarPopUp" style="width: 250px; max-width: 250px;height: 300px; max-height: 300px;
+     border: 1px solid gray; border-radius: 4px; padding: 5px 5px 5px 5px;">
+
+        <form>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="makeSelectN">Make</label>
+                </div>
+                <select class="makeSelect" id="makeSelectN">
+                    <option selected hidden disabled>Choose a make</option>
+                </select>
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="modelSelectN">Model</label>
+                </div>
+                <select class="modelSelect" id="modelSelectN">
+                    <option selected hidden disabled>Choose a model</option>
+                </select>
+            </div>
+
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="vinN"
+                       aria-label="vinN" id="vinN">
+            </div>
+
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="license plate"
+                       aria-label="license plate" id="licensePlateN">
+            </div>
+
+            <div class="text-center">
+                <button type="button" id="createCarBtnSaveN"
+                        class="btn btn-lg btn-primary btn-block shadow-none text-uppercase">Save
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div th:fragment="newCustomerPopup">
+    <div id="newCustomerPopup">
+
+        <div class="justify-content-center" id="content">
+
+            <form name="userForm" id="userForm">
+                <h5 class="text-center">Create new customer</h5>
+                <div class="field form-label-group mt-4">
+                    <span id="emailError" style="display: none">Not a valid email.</span>
+                    <input type="email" id="email" class="form-control" placeholder="Email address"
+                           name="email" required>
+                </div>
+
+                <div class="field form-label-group mt-4">
+                    <span id="nameError" style="display: none">Name can be between 5 and 25 characters.</span>
+                    <input type="text" id="name" class="form-control" placeholder="Customer name"
+                           name="name" required>
+                </div>
+
+                <div class="field form-label-group mt-4">
+                    <span id="phoneError" style="display: none">Phone can be between 10 and 30 symbols.</span>
+                    <input type="text" id="phone" class="form-control" placeholder="Phone"
+                           name="phone" required>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="button" id="regBtn"
+                            class="btn btn-lg btn-primary btn-block shadow-none text-uppercase" disabled>Register
+                    </button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="passwordChangePopup">
+    <div id="passwordChangePopup" style="width: 250px; max-width: 250px;height: 300px; max-height: 300px;
+     border: 1px solid gray; border-radius: 4px; padding: 5px 5px 5px 5px;">
+        <div class="justify-content-center" style="border: 1px solid gray;padding: 30px 10px 10px 10px;
+    border-radius: 15px;background: white;height: 300px;width: 250px;">
+
+            <form>
+                <h5 class="text-center">Change your password</h5>
+                <div class="input-group mb-3">
+                    <input type="password" class="form-control" placeholder="Old password"
+                           aria-label="Old password" id="oldPassword">
+                </div>
+                <div class="input-group mb-3">
+                    <input type="password" class="form-control" placeholder="New password"
+                           aria-label="New password" id="newPassword">
+                </div>
+                <div class="input-group mb-3">
+                    <input type="password" class="form-control" placeholder="Confirm new password"
+                           aria-label="Confirm new password" id="confirmPassword">
+                </div>
+                <div class="text-center">
+                    <button type="button" id="updatePasswordBtn" class="btn btn-primary" disabled>Submit</button>
+
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<div th:fragment="editCarPopUp">
+    <div id="editCarPopUp">
+        <div class="justify-content-center">
+            <form>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="vinChange"
+                           aria-label="vinChange" id="vinChange">
+                </div>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="plateChange"
+                           aria-label="plateChange" id="plateChange">
+                </div>
+
+                <div class="text-center">
+                    <button type="button" id="updateCar"
+                            class="btn btn-lg btn-primary btn-block shadow-none text-uppercase">Save
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="editCustomerPopUp">
+    <div id="editCustomerPopUp">
+        <div class="justify-content-center">
+
+            <form>
+                <h5 class="text-center">Edit customer information</h5>
+                <div class="input-group mt-3 mb-3">
+                    <input type="text" class="form-control" placeholder="custName"
+                           aria-label="name" id="custName">
+                </div>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="phoneNumber"
+                           aria-label="phoneNumber" id="phoneNumber">
+                </div>
+
+                <div class="text-center">
+                    <button type="button" id="updateCustomer"
+                            class="btn btn-lg btn-primary btn-block shadow-none text-uppercase">Save
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+<div th:fragment="editServicePopUp">
+    <div id="editServicePopUp" style="width: 250px; max-width: 250px;height: 300px; max-height: 300px;
+     border: 1px solid gray; border-radius: 4px; padding: 5px 5px 5px 5px;">
+        <div class="justify-content-center">
+
+            <form id="editServiceForm">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Service name"
+                           aria-label="price" id="editServiceName">
+                </div>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Service price"
+                           aria-label="price" id="editServicePrice">
+                </div>
+
+                <div class="text-center">
+                    <button type="button" id="editServiceBtn"
+                            class="btn btn-lg btn-primary btn-block shadow-none text-uppercase">Save
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+<div th:fragment="newServicePopUp">
+    <div id="newServicePopUp" style="width: 250px; max-width: 250px;height: 300px; max-height: 300px;
+     border: 1px solid gray; border-radius: 4px; padding: 5px 5px 5px 5px;">
+        <div class="justify-content-center">
+
+            <form id="newServiceForm">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Service name"
+                           aria-label="text" id="newServiceName" required>
+                </div>
+                <div class="input-group mb-3">
+                    <input type="number" min="0.00" step="0.50" class="form-control" placeholder="Service price"
+                           aria-label="price" id="newServicePrice" required>
+                </div>
+
+                <div class="text-center">
+                    <button type="button" id="newServiceBtn"
+                            class="btn btn-lg btn-primary btn-block shadow-none text-uppercase">Save
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<div th:fragment="assignNewCarPopup">
+    <div id="assignNewCarPopup">
+        <h5 class="text-center">Assign new car to a customer</h5>
+        <form>
+            <div class="input-group mb-3">
+                <select class="customerSelect form-control" id="customerSelect">
+                    <option selected hidden disabled>Choose a customer</option>
+                </select>
+            </div>
+            <div class="input-group mb-3">
+                <select class="makeSelect form-control" id="makeSelect" style="width: 100%; box-sizing: border-box">
+                    <option selected hidden disabled>Choose a make</option>
+                </select>
+            </div>
+            <div class="input-group mb-3">
+                <select class="modelSelect form-control" id="modelSelect">
+                    <option selected hidden disabled>Choose a model</option>
+                </select>
+            </div>
+            <div class="input-group mb-3">
+                <span id="vinError" style="display: none">Length must be 17 symbols.</span>
+                <input type="text" class="form-control" placeholder="vin"
+                       aria-label="vin" id="vin">
+            </div>
+
+            <div class="input-group mb-3">
+                <span id="licenseError" style="display: none">Length must between 8 and 10 symbols.</span>
+                <input type="text" class="form-control" placeholder="license plate"
+                       aria-label="license plate" id="licensePlate">
+            </div>
+
+            <div class="text-center">
+                <button type="button" id="createCarBtnSave"
+                        class="btn btn-lg btn-primary btn-block shadow-none text-uppercase" disabled>Save
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

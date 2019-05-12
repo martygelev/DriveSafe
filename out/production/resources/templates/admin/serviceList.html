@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Services</title>
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/navBars.css">
+    <link rel="stylesheet" href="/css/animate.css">
+    <link rel="stylesheet" href="/css/popups.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        #servicesHolder {
+            margin: 50px;
+            padding: 20px;
+        }
+
+        .serviceItem {
+            margin: 10px;
+        }
+
+        .serviceName,
+        .servicePrice {
+            font-size: x-large;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+<div class="d-flex" id="wrapper">
+    <div th:insert="fragments/sidebar.html :: sidebar"></div>
+    <div id="page-content-wrapper">
+        <div th:insert="fragments/header.html :: header"></div>
+
+        <div id="servicesHolder" class="border">
+            <div class="">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-primary newServicePopUp_open"
+                                type="button" id="newServiceButton">Create new
+                        </button>
+                    </div>
+                    <input type="search" class="serviceSearch form-control" id="myInput"
+                           placeholder="Search for a service...">
+                </div>
+            </div>
+            <div class="mainContent">
+
+                <div th:each="service : ${repairServices}">
+
+                    <ul class="list-group" id="services-List">
+                        <li class="list-group-item serviceItem">
+                            <span class="serviceName" th:text="${service.name}"></span>
+                            <span>   -   </span>
+                            <span class="servicePrice" th:text="${service.price}"></span>
+                            <div class="btn-group float-right" role="group" aria-label="Basic example">
+                                <button type="button"
+                                        class="editServiceButton btn btn-outline-info editServicePopUp_open"
+                                        th:attr="data-serviceId=${service.id}">Edit
+                                </button>
+                                <button type="button" class="deleteServiceButton btn btn-outline-danger"
+                                        th:attr="data-serviceId=${service.id}">Remove
+                                </button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:insert="fragments/footer.html :: footer"></div>
+<div th:insert="fragments/popups.html :: editServicePopUp"></div>
+<div th:insert="fragments/popups.html :: newServicePopUp"></div>
+
+<script src="/js/jquery-3.4.0.min.js"></script>
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-popup-overlay/2.1.1/jquery.popupoverlay.min.js"></script>
+<script type="module" src="/js/popups.js"></script>
+<script src="/js/bootstrap-notify.min.js"></script>
+
+<script>
+    // let func = submitNewService();
+    $(document).ready(function () {
+
+        let selectedServiceId;
+        let selectedServiceName;
+        let selectedServicePrice;
+
+        $('.editServiceButton').click(function () {
+            selectedServiceId = Number($(this).attr('data-serviceId'));
+            selectedServiceName = $(this).closest('li').find('span.serviceName').text();
+            selectedServicePrice = $(this).closest('li').find('span.servicePrice').text();
+        })
+
+
+        $('.deleteServiceButton').click(function () {
+            let parent = $(this).closest('li');
+            selectedServiceId = Number($(this).attr('data-serviceId'));
+            selectedServiceName = $(this).closest('li').find('span.serviceName').text();
+
+            if (confirm(`Are you sure you want to delete ${selectedServiceName} permanently?`)) {
+                $.ajax({
+                    url: '/r-services/delete',
+                    type: 'PUT',
+                    data: {"id": `${selectedServiceId}`},
+                    success: function () {
+                        $.notify({
+                            message: "Service deleted successfully."
+                        }, {
+                            type: 'success',
+                            delay: 4000
+                        });
+
+                        parent.hide('slow', function(){ parent.remove(); });
+
+                    },
+                    error: function () {
+                        $.notify({
+                            message: "Error while trying to delete service."
+                        }, {
+                            type: 'danger',
+                            delay: 4000
+                        });
+                    }
+                })
+            }
+        })
+
+        $("#myInput").on("keyup", function () {
+            let value = $(this).val();
+            $("#services-List li").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+
+
+        $('#newServiceBtn').click(function () {
+            submitNewService();
+        })
+
+        $('#editServicePopUp').popup({
+            onopen: function () {
+                $('#editServiceForm #editServiceName').val(selectedServiceName);
+                $('#editServiceForm #editServicePrice').val(selectedServicePrice);
+
+
+                $('#editServiceBtn').click(function () {
+                    let editedName = $('#editServiceForm #editServiceName').val();
+                    let editedPrice = $('#editServiceForm #editServicePrice').val();
+
+                    let service = {
+                        "id": `${selectedServiceId}`,
+                        "name": `${editedName}`,
+                        "price": `${editedPrice}`
+                    };
+
+                    $.ajax({
+                        url: '/r-services/edit',
+                        type: 'PUT',
+                        contentType: 'application/json; charset=utf-8',
+                        data: JSON.stringify(service),
+                        success: function () {
+                            location.reload();
+                        },
+                        error: function () {
+                        }
+                    })
+                });
+
+            }
+        })
+        ;
+
+
+    })
+
+</script>
+</body>
+</html>

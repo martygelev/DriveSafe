@@ -1,0 +1,45 @@
+plugins {
+    id 'org.springframework.boot' version '2.1.4.RELEASE'
+    id 'java'
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.team14'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'mysql:mysql-connector-java'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    //Security
+    compile 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+    compile 'org.springframework.boot:spring-boot-starter-security'
+
+    //Thymeleaf
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    
+    //Testing
+    testImplementation 'org.mockito:mockito-core:2.7.22'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testCompile group: 'org.springframework.security', name: 'spring-security-test', version: '5.1.5.RELEASE'
+
+    //PDF Generation
+    compile group: 'org.xhtmlrenderer', name: 'flying-saucer-core', version: '9.1.18'
+    compile group: 'org.xhtmlrenderer', name: 'flying-saucer-pdf-itext5', version: '9.1.18'
+
+    //Email & pass
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.1.4.RELEASE'
+
+    compile group: 'org.passay', name: 'passay', version: '1.4.0'
+
+    // jQuery
+    compile group: 'org.webjars', name: 'jquery', version: '3.3.1'
+
+}

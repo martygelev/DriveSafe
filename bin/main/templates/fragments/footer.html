@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<th:block th:include="fragments/general.html :: headerLinks">
+</th:block>
+<head>    <link rel="stylesheet" type="text/css" href="../../static/css/main.css" th:href="@{/css/main.css}">
+    <title></title>
+</head>
+<style>
+
+    html,
+    body {
+        height: 100%;
+    }
+
+    #page-content {
+        flex: 1 0 auto;
+    }
+
+    #sticky-footer {
+        flex-shrink: none;
+    }
+
+    /* Other Classes for Page Styling */
+
+    body {
+        background: #007bff;
+        background: linear-gradient(to right, #0062E6, #33AEFF);
+    }
+</style>
+<body>
+
+<div id="page-content" th:fragment="footer">
+
+<footer id="sticky-footer" class="py-4 bg-dark text-white-50">
+    <div class="container text-center">
+        <span sec:authorize="isAuthenticated()" style="display: inline-block;">
+             Logged user: <span sec:authentication="name"></span> </span>|
+        <small>Copyright &copy; DriveSafe 2019</small>
+    </div>
+</footer>
+</div>
+
+</body>
+</html>

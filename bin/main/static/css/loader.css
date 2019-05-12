@@ -1,0 +1,318 @@
+body {
+    background: #0070ba;
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    margin: 0;
+    padding: 0;
+}
+
+.loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.loader:before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.preloader:after{
+    content:'';
+    position: absolute;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    transition: 1s;
+
+}
+.preloader.complete{
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.holder {
+    width: 800px;
+    height: 200px;
+    overflow: hidden;
+    border-bottom: 4px solid white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.car {
+    background-image: url(https://www.dropbox.com/s/f06xkrg2u1m86s4/car.svg?raw=1);
+    background-repeat: no-repeat;
+    width: 150px;
+    height: 65px;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    -webkit-animation: car 1s ease infinite alternate;
+    animation: car 1s ease infinite alternate;
+    -webkit-transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
+}
+
+.wheels {
+    background-image: url(https://www.dropbox.com/s/l2m44kr5op8yazi/wheels.svg?raw=1);
+    background-repeat: no-repeat;
+    width: 118px;
+    height: 30px;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+
+.wind-holder {
+    width: 50px;
+    height: 30px;
+    overflow: hidden;
+    position: absolute;
+    bottom: 10px;
+    left: 36%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+.wind-holder .wind,
+.wind-holder .wind2 {
+    height: 3px;
+    width: 100%;
+    background-color: white;
+    border-radius: 10px;
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-50%) translateX(100%);
+    transform: translateY(-50%) translateX(100%);
+    -webkit-animation: wind-move 1s ease-in-out infinite;
+    animation: wind-move 1s ease-in-out infinite;
+}
+.wind-holder .wind2 {
+    top: 20%;
+    -webkit-animation-delay: 0.3s;
+    animation-delay: 0.3s;
+}
+
+.tree {
+    background-repeat: no-repeat;
+    width: 48px;
+    height: 100px;
+    position: absolute;
+    bottom: -2px;
+    right: 0;
+    z-index: -1;
+    -webkit-transform: translateX(100%);
+    transform: translateX(100%);
+    -webkit-animation: move 5s linear infinite;
+    animation: move 5s linear infinite;
+}
+.tree.tree1 {
+    background-image: url(https://www.dropbox.com/s/5dbkg0yt2ckeqyf/tree1.svg?raw=1);
+    z-index: 1;
+}
+.tree.tree2 {
+    background-image: url(https://www.dropbox.com/s/fifowbwsyalrp8o/tree2.svg?raw=1);
+    -webkit-animation: move 8s linear infinite;
+    animation: move 8s linear infinite;
+    height: 75px;
+}
+.tree.tree3 {
+    background-image: url(https://www.dropbox.com/s/vdhk3jotm2vtn34/tree3.svg?raw=1);
+    -webkit-animation: move 11s linear infinite;
+    animation: move 11s linear infinite;
+    height: 50px;
+}
+
+.hill {
+    width: 200%;
+    height: 25%;
+    background-position: 0 40%;
+    background-repeat: repeat-x;
+    background-size: 50% 100px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: -2;
+}
+.hill.hill1 {
+    background-image: url(https://www.dropbox.com/s/s9nph2wch4r2f8e/hills1.svg?raw=1);
+    -webkit-animation: land-move 12s linear infinite;
+    animation: land-move 12s linear infinite;
+}
+.hill.hill2 {
+    background-image: url(https://www.dropbox.com/s/0rsj8j62qe69f22/hills2.svg?raw=1);
+    -webkit-animation: land-move 17s linear infinite;
+    animation: land-move 17s linear infinite;
+}
+
+.cloud {
+    background-repeat: no-repeat;
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    -webkit-transform: translateX(100%);
+    transform: translateX(100%);
+}
+.cloud.cloud1 {
+    background-image: url(https://www.dropbox.com/s/h16lixb7mktsueu/cloud.svg?raw=1);
+    -webkit-animation: move 25s linear infinite;
+    animation: move 25s linear infinite;
+}
+.cloud.cloud1-2 {
+    background-image: url(https://www.dropbox.com/s/h16lixb7mktsueu/cloud.svg?raw=1);
+    top: 20px;
+    -webkit-animation: move 25s linear infinite;
+    animation: move 25s linear infinite;
+    -webkit-animation-delay: 10s;
+    animation-delay: 10s;
+}
+.cloud.cloud2 {
+    background-image: url(https://www.dropbox.com/s/iuougdt5yvphtn5/cloud2.svg?raw=1);
+    top: 20px;
+    -webkit-animation: move 22s linear infinite;
+    animation: move 22s linear infinite;
+    -webkit-animation-delay: 1s;
+    animation-delay: 1s;
+}
+.cloud.cloud2-2 {
+    background-image: url(https://www.dropbox.com/s/iuougdt5yvphtn5/cloud2.svg?raw=1);
+    top: 20px;
+    -webkit-animation: move 25s linear infinite;
+    animation: move 25s linear infinite;
+    -webkit-animation-delay: 20s;
+    animation-delay: 20s;
+}
+
+@-webkit-keyframes wind-move {
+    0% {
+        -webkit-transform: translateY(-50%) translateX(100%);
+        transform: translateY(-50%) translateX(100%);
+    }
+    100% {
+        -webkit-transform: translateY(-50%) translateX(-100%);
+        transform: translateY(-50%) translateX(-100%);
+    }
+}
+
+@keyframes wind-move {
+    0% {
+        -webkit-transform: translateY(-50%) translateX(100%);
+        transform: translateY(-50%) translateX(100%);
+    }
+    100% {
+        -webkit-transform: translateY(-50%) translateX(-100%);
+        transform: translateY(-50%) translateX(-100%);
+    }
+}
+@-webkit-keyframes wind-bob {
+    0% {
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+    }
+    50% {
+        -webkit-transform: translateY(-10px);
+        transform: translateY(-10px);
+    }
+    100% {
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+    }
+}
+@keyframes wind-bob {
+    0% {
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+    }
+    50% {
+        -webkit-transform: translateY(-10px);
+        transform: translateY(-10px);
+    }
+    100% {
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+    }
+}
+@-webkit-keyframes car {
+    0% {
+        -webkit-transform: translateX(-50%) translateY(0);
+        transform: translateX(-50%) translateY(0);
+    }
+    50% {
+        -webkit-transform: translateX(-50%) translateY(-1px);
+        transform: translateX(-50%) translateY(-1px);
+    }
+    100% {
+        -webkit-transform: translateX(-50%) translateY(0);
+        transform: translateX(-50%) translateY(0);
+    }
+}
+@keyframes car {
+    0% {
+        -webkit-transform: translateX(-50%) translateY(0);
+        transform: translateX(-50%) translateY(0);
+    }
+    50% {
+        -webkit-transform: translateX(-50%) translateY(-1px);
+        transform: translateX(-50%) translateY(-1px);
+    }
+    100% {
+        -webkit-transform: translateX(-50%) translateY(0);
+        transform: translateX(-50%) translateY(0);
+    }
+}
+@-webkit-keyframes move {
+    0% {
+        -webkit-transform: translateX(100%);
+        transform: translateX(100%);
+    }
+    100% {
+        -webkit-transform: translateX(-2000%);
+        transform: translateX(-2000%);
+    }
+}
+@keyframes move {
+    0% {
+        -webkit-transform: translateX(100%);
+        transform: translateX(100%);
+    }
+    100% {
+        -webkit-transform: translateX(-2000%);
+        transform: translateX(-2000%);
+    }
+}
+@-webkit-keyframes land-move {
+    0% {
+        -webkit-transform: translateX(0);
+        transform: translateX(0);
+    }
+    100% {
+        -webkit-transform: translateX(-800px);
+        transform: translateX(-800px);
+    }
+}
+@keyframes land-move {
+    0% {
+        -webkit-transform: translateX(0);
+        transform: translateX(0);
+    }
+    100% {
+        -webkit-transform: translateX(-800px);
+        transform: translateX(-800px);
+    }
+}

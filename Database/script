@@ -1,0 +1,200 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Schema car_service_db
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema car_service_db
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `car_service_db` DEFAULT CHARACTER SET latin1 ;
+USE `car_service_db` ;
+
+-- -----------------------------------------------------
+-- Table `car_service_db`.`users`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `car_service_db`.`users` (
+                                                            `emailUsername` VARCHAR(120) NOT NULL,
+                                                            `password` VARCHAR(100) NOT NULL,
+                                                            `enabled` INT(11) NOT NULL,
+                                                            PRIMARY KEY (`emailUsername`),
+                                                            UNIQUE INDEX `username_UNIQUE` (`emailUsername` ASC) )
+        ENGINE = InnoDB
+        DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `car_service_db`.`authorities`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `car_service_db`.`authorities` (
+                                                                  `emailUsername` VARCHAR(120) NOT NULL,
+                                                                  `aurhority` VARCHAR(45) NOT NULL,
+                                                                  INDEX `fk_username_idx` (`emailUsername` ASC) ,
+                                                                  CONSTRAINT `fk_username`
+                                                                          FOREIGN KEY (`emailUsername`)
+                                                                                  REFERENCES `car_service_db`.`users` (`emailUsername`)
+                                                                                  ON DELETE NO ACTION
+                                                                                  ON UPDATE NO ACTION)
+        ENGINE = InnoDB
+        DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `car_service_db`.`makes`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `car_service_db`.`makes` (
+                                                            `id` INT(11) NOT NULL AUTO_INCREMENT,
+                                                            `name` VARCHAR(120) NOT NULL,
+                                                            PRIMARY KEY (`id`))
+        ENGINE = InnoDB
+        AUTO_INCREMENT = 74
+        DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `car_service_db`.`models`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `car_service_db`.`models` (
+                                                             `id` INT(11) NOT NULL AUTO_INCREMENT,
+                                                             `model` VARCHAR(120) NOT NULL,
+                                                             `make_id` INT(11) NOT NULL,
+                                                             `year` VARCHAR(50) NOT NULL,
+                                                             `isdeleted` TINYINT(4) NOT NULL DEFAULT '0',
+                                                             PRIMARY KEY (`id`),
+                                                             INDEX `fk_make_id_idx` (`make_id` ASC) ,
+                                                             CONSTRAINT `fk_make_id`
+                                                                     FOREIGN KEY (`make_id`)
+                                                                             REFERENCES `car_service_db`.`makes` (`id`)
+                                                                             ON DELETE NO ACTION
+                                                                             ON UPDATE NO ACTION)
+        ENGINE = InnoDB
+        AUTO_INCREMENT = 13646
+        DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `car_service_db`.`cars`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `car_service_db`.`cars` (
+                                                           `id` INT(11) NOT NULL,
+                                                           `vin` VARCHAR(50) NOT NULL,
+                                                           `license_plate` VARCHAR(50) NOT NULL,
+                                                           PRIMARY KEY (`id`),
+                                                           UNIQUE INDEX `vin` (`vin` ASC) ,
+                                                           UNIQUE INDEX `license_plate` (`license_plate` ASC) ,
+                                                           CONSTRAINT `fk_cars_models`
+                                                                   FOREIGN KEY (`id`)
+                                                                           REFERENCES `car_service_db`.`models` (`id`)
+                                                                           ON DELETE NO ACTION
+                                                                           ON UPDATE NO ACTION)
+        ENGINE = InnoDB
+        DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `car_service_db`.`customers`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `car_service_db`.`customers` (
+                                                                `id` INT(11) NOT NULL AUTO_INCREMENT,
+                                                                `email` VARCHAR(120) NOT NULL,
+                                                                `phone` VARCHAR(60) NOT NULL,
+                                                                `name` VARCHAR(120) NOT NULL,
+                                                                PRIMARY KEY (`id`),
+                                                                UNIQUE INDEX `email_UNIQUE` (`email` ASC) ,
+                                                                CONSTRAINT `fk_email`
+                                                                        FOREIGN KEY (`email`)
+                                                                                REFERENCES `car_service_db`.`users` (`emailUsername`)
+                                                                                ON DELETE NO ACTION
+                                                                                ON UPDATE NO ACTION)
+        ENGINE = InnoDB
+        DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `car_service_db`.`customer_cars`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `car_service_db`.`customer_cars` (
+                                                                    `car_id` INT(11) NOT NULL,
+                                                                    `customer_id` INT(11) NOT NULL,
+                                                                    `id` INT NOT NULL AUTO_INCREMENT,
+                                                                    INDEX `fk_customer_id_idx` (`customer_id` ASC) ,
+                                                                    INDEX `fk_car_id_idx` (`car_id` ASC) ,
+                                                                    PRIMARY KEY (`id`),
+                                                                    CONSTRAINT `fk_car_id`
+                                                                            FOREIGN KEY (`car_id`)
+                                                                                    REFERENCES `car_service_db`.`cars` (`id`)
+                                                                                    ON DELETE NO ACTION
+                                                                                    ON UPDATE NO ACTION,
+                                                                    CONSTRAINT `fk_customer_id`
+                                                                            FOREIGN KEY (`customer_id`)
+                                                                                    REFERENCES `car_service_db`.`customers` (`id`)
+                                                                                    ON DELETE NO ACTION
+                                                                                    ON UPDATE NO ACTION)
+        ENGINE = InnoDB
+        DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `car_service_db`.`events`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `car_service_db`.`events` (
+                                                             `id` INT(11) NOT NULL AUTO_INCREMENT,
+                                                             `date` VARCHAR(45) NOT NULL,
+                                                             `customer_car` INT(11) NOT NULL,
+                                                             `total_price` DOUBLE NOT NULL,
+                                                             `finallized` TINYINT(4) NOT NULL,
+                                                             PRIMARY KEY (`id`),
+                                                             INDEX `fk_customer_car_idx` (`customer_car` ASC) ,
+                                                             CONSTRAINT `fk_event_customer_car`
+                                                                     FOREIGN KEY (`id`)
+                                                                             REFERENCES `car_service_db`.`customer_cars` (`id`)
+                                                                             ON DELETE NO ACTION
+                                                                             ON UPDATE NO ACTION)
+        ENGINE = InnoDB
+        DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `car_service_db`.`services`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `car_service_db`.`services` (
+                                                               `id` INT(11) NOT NULL AUTO_INCREMENT,
+                                                               `name` VARCHAR(120) NOT NULL,
+                                                               `price` DOUBLE NOT NULL,
+                                                               PRIMARY KEY (`id`))
+        ENGINE = InnoDB
+        DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `car_service_db`.`histories`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `car_service_db`.`histories` (
+                                                                `service_id` INT(11) NOT NULL,
+                                                                `visit_id` INT(11) NOT NULL,
+                                                                INDEX `fk_service_id_idx` (`visit_id` ASC) ,
+                                                                INDEX `fk_service_id_idx1` (`service_id` ASC) ,
+                                                                CONSTRAINT `fk_service_id`
+                                                                        FOREIGN KEY (`service_id`)
+                                                                                REFERENCES `car_service_db`.`services` (`id`)
+                                                                                ON DELETE NO ACTION
+                                                                                ON UPDATE NO ACTION,
+                                                                CONSTRAINT `fk_visit_id`
+                                                                        FOREIGN KEY (`visit_id`)
+                                                                                REFERENCES `car_service_db`.`events` (`id`)
+                                                                                ON DELETE NO ACTION
+                                                                                ON UPDATE NO ACTION)
+        ENGINE = InnoDB
+        DEFAULT CHARACTER SET = latin1;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

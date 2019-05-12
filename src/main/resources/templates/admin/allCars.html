@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Cars</title>
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/navBars.css">
+    <link rel="stylesheet" href="/css/animate.css">
+    <link rel="stylesheet" href="/css/popups.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+
+        div#page-content-wrapper {
+            margin-bottom: 81px;
+        }
+
+        button.assignNewCarPopup {
+            margin-left: 134px;
+        }
+
+        .card {
+            margin-left: 2px;
+            margin-top: 2px;
+            margin-bottom: 2px;
+            margin-right: 2px;
+            border-radius: 5px;
+        }
+
+        button#newCar {
+            margin-left: 136px;
+        }
+
+        #myInput {
+            background-position: 1px 1px;
+            background-repeat: no-repeat;
+            width: 72%;
+            font-size: 14px;
+            padding: 11px 20px 12px 4px;
+            border: 1px solid #ddd;
+            margin-bottom: 18px;
+            margin-top: 20px;
+            margin-left: 15px;
+            border-radius: 16px;
+        }
+
+        div.mainContent {
+            margin-left: 133px;
+        }
+
+
+
+        #closeCar {
+            padding: inherit;
+            margin: 2px;
+            margin-left: 243px;
+        }
+
+        .card-body {
+            -ms-flex: 1 1 auto;
+            flex: 1 1 auto;
+            padding: .25rem;
+            margin-left: 26px;
+            margin-right: 23px;
+            margin-bottom: 5px;
+
+        }
+        div#closeCarDivId {
+            font-size: 1.7rem;
+            font-family: fantasy;
+            color: red;
+            margin-left: 242px;
+            margin-right: -16px;
+            -webkit-appearance: button-bevel;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="../../static/css/navBars.css" th:href="@{/css/navBars.css}">
+</head>
+<body>
+
+<div id="page">
+    <div class="d-flex" id="wrapper">
+
+        <div th:insert="fragments/sidebar.html :: sidebar"></div>
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+
+            <div th:insert="fragments/header.html :: header"></div>
+            <button type="button" class="btn btn-info btn-lg center-block assignNewCarPopup_open" data-toggle="modal"
+                    data-target="#mymodal" id="newCar">New Car
+            </button>
+            <label for="myInput"></label><input type="text" id="myInput" placeholder="Search for cars..">
+
+            <div class="mainContent">
+
+
+                <div th:each="car : ${cars}">
+                    <div th:insert="fragments/carCard.html
+                :: card(id = ${car.id},make=${car.getModel().getManufacturer().getName()},model=${car.getModel().getName()},
+                vin=${car.getVin()}, licensePlate=${car.getLicensePlate()})"></div>
+                </div>
+
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+    <div th:insert="fragments/footer.html :: footer"></div>
+    <div th:insert="fragments/popups.html :: assignNewCarPopup"></div>
+</div>
+<script src="/js/jquery-3.4.0.min.js"></script>
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-popup-overlay/2.1.1/jquery.popupoverlay.min.js"></script>
+<script type="module" src="/js/popups.js"></script>
+<script src="/js/bootstrap-notify.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // console.log($("#card-body").innerText);
+        // console.log($("#card-body").val());
+        // $('#closeCarDivId').on('mouseover', function(){ console.log( this.name + this.model + this.licensePlate + this.id + this.url ) } );
+        //
+        // let pos = $("#positionUrlPHrefT");
+        // console.log(this.a);
+        // console.log($("#card-body").innerText);
+        // console.log($("#card-body").val());
+        // console.log("pos val =" + pos.val());
+        // console.log("pos href = " + pos.href);
+        // console.log("pos href element val= " + $("#positionUrlPHrefT").val());
+        // console.log("pos href element val= " + $("#positionUrlPHrefT").innerText);
+        // console.log(id);
+        // console.log(id);
+        //
+        // $(document).ready(function () {
+        //     $('#closeCarDivId').on('mouseover', function () {
+        //         console.log(this.div);
+        //         console.log($("#card-body").innerText);
+        //         console.log($("#card-body").val());
+        //         console.log("pos val =" + pos.val());
+        //         console.log("pos href = " + pos.href);
+        //         console.log("pos href element val= " + $("#positionUrlPHrefT").val());
+        //         console.log("pos href element val= " + $("#positionUrlPHrefT").innerText);
+        //
+        //         console.log(id);
+        //         console.log(id);
+        //
+        //     });
+        // });
+
+        // $('#closeCarDivId').click(function () {
+        //     let pathname = window.location.pathname;
+        //     let n = pathname.lastIndexOf('/');
+        //     let id = pathname.substring(n + 1);
+        //     $.ajax({
+        //         url: '/car/delete/' + id ,
+        //         type: 'DELETE',
+        //         success: function () {
+        //             $.ajax({
+        //                 url: '/cars/' + id
+        //             })
+        //         },
+        //         error: function () {
+        //             alert("@@!!!#&!@!#&#@&!#&@#@&@#&")
+        //         }
+        //     });
+        // });
+
+        $("#myInput").on("keyup", function () {
+            let value = $(this).val();
+            $(".mainContent div").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+
+
+    });
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="../../static/css/main.css" th:href="@{/css/main.css}">
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        div.card-body {
+            width: 17rem;
+            float: left;
+            height: 11rem;
+
+        }
+
+        #closeCarDivId {
+            padding: inherit;
+            margin: 2px;
+            margin-left: 243px;
+        }
+
+        div#closeCarDivId {
+            font-size: 1.7rem;
+            font-family: fantasy;
+            color: red;
+            margin-left: 242px;
+            margin-right: -16px;
+            -webkit-appearance: button-bevel;
+        }
+
+    </style>
+
+</head>
+<body>
+<div class="card" th:fragment="card (id,make, model, vin, licensePlate)"
+     style="width: 18rem;float: left;height: 10rem;">
+
+    <div>
+        <div class="card-body">
+            <div type="button" id="closeCarDivId" class="close" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </div>
+            <a id="positionUrlPHrefT" style='position:absolute;top:0;left:0;width:100%;height:100%;display:inline;'
+               th:href="@{'/cars/' + ${id}}"></a>
+            <h4 class="card-make" th:text="${make}">make</h4>
+            <h5 class="card-title" th:text="${model}">model</h5>
+            <h6 class="card-subtitle mb-2 text-muted" th:text="${vin}">vin</h6>
+            <p class="card-text" th:text="${licensePlate}">licensePlate</p>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.4.0.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-popup-overlay/2.1.1/jquery.popupoverlay.min.js"></script>
+
+<script src="../../static/js/bootstrap.bundle.min.js"></script>
+<script src="../../static/js/bootstrap-notify.min.js"></script>
+<script>
+    // console.log($("#card-body").innerText);
+    // console.log($("#card-body").val());
+    // $('#closeCarDivId').on('mouseover', function(){ console.log( this.name + this.model + this.licensePlate + this.id + this.url ) } );
+    //
+    // let pos = $("#positionUrlPHrefT");
+    // console.log(this.a);
+    //
+    // console.log("pos val =" + pos.val());
+    // console.log("pos href = " + pos.href);
+    // console.log("pos href element val= " + $("#positionUrlPHrefT").val());
+    // console.log("pos href element val= " + $("#positionUrlPHrefT").innerText);
+    // console.log(id);
+    // console.log(id);
+    //
+    // $(document).ready(function () {
+    //     $('#closeCarDivId').on('mouseover', function () {
+    //         console.log($("#card-body").innerText);
+    //         console.log($("#card-body").val());
+    //
+    //         console.log("pos val =" + pos.val());
+    //         console.log("pos href = " + pos.href);
+    //         console.log("pos href element val= " + $("#positionUrlPHrefT").val());
+    //         console.log("pos href element val= " + $("#positionUrlPHrefT").innerText);
+    //
+    //         console.log(id);
+    //         console.log(id);
+    //
+    //     });
+    // });
+
+</script>
+</body>
+</html>

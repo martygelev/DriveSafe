@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Sign In</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row no-gutter">
+        <div class="d-none d-md-flex col-md-4 col-lg-6 bg-image"
+             th:style="'background-image: url(/images/loginBg.jpg)'"></div>
+        <div class="col-md-8 col-lg-6">
+            <div class="login d-flex align-items-center py-5">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-9 col-lg-8 mx-auto">
+                            <h3 class="login-heading mb-4 text-center">Welcome back!</h3>
+
+                            <form th:action="@{/authenticate}" method="post">
+
+                                <div th:if="${param.error}" class="alert alert-danger">
+                                    Invalid username or password.
+                                </div>
+
+                                <div th:if="${param.logout}" class="alert alert-info">
+                                    You have been logged out.
+                                </div>
+
+                                <div class="field form-label-group">
+                                    <input type="text" id="username" class="form-control" placeholder="Email address"
+                                           name="username" required autofocus>
+                                    <label for="username">Email address</label>
+                                </div>
+
+                                <div class="field form-label-group">
+                                    <input type="password" id="password" class="form-control"
+                                           placeholder="Password" name="password" required>
+                                    <label for="password">Password</label>
+                                </div>
+
+                                <!--                                <div class="custom-control custom-checkbox mb-3">-->
+                                <!--                                    <input type="checkbox" class="custom-control-input" id="customCheck1">-->
+                                <!--                                    <label class="custom-control-label" for="customCheck1">Remember password</label>-->
+                                <!--                                </div>-->
+                                <button class="btn btn-primary btn-block btn-login text-uppercase font-weight-bold mb-2"
+                                        type="submit">Sign in
+                                </button>
+                                <div class="text-center" style="font-size: 12px;">
+                                    <a href="anonymous/forgotPassword"
+                                       th:text="#{message.forgotPassword}">Forgot password?</a></div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/jquery-3.4.0.min.js"></script>
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script src="/js/bootstrap-notify.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+            if (window.location.hash !== 'undefined') {
+                if (window.location.hash === '#passChangeSucc') {
+                    removeHash();
+                    $.notify({
+                        message: 'Password changed successfully. Please log back in.'
+                    }, {
+                        type: 'success',
+                        delay: 6000
+                    });
+                }else if (window.location.hash === '#passChangeEmailSent'){
+                    removeHash();
+                    $.notify({
+                        message: 'Success. You should receive email to reset your password shortly!'
+                    }, {
+                        type: 'success',
+                        delay: 6000
+                    });
+                }
+            }
+
+        function removeHash () {
+            let scrollV, scrollH, loc = window.location;
+            if ("pushState" in history)
+                history.pushState("", document.title, loc.pathname + loc.search);
+            else {
+                // Prevent scrolling by storing the page's current scroll offset
+                scrollV = document.body.scrollTop;
+                scrollH = document.body.scrollLeft;
+
+                loc.hash = "";
+
+                // Restore the scroll offset, should be flicker free
+                document.body.scrollTop = scrollV;
+                document.body.scrollLeft = scrollH;
+            }
+        }
+    });
+</script>
+</body>
+</html>

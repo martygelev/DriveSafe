@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/navBars.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+<body>
+
+<div class="border-right" th:fragment="sidebar">
+    <div class="border-right" id="sidebar-wrapper">
+        <div class="sidebar-heading" style="height: 57px">DriveSafe Car Service</div>
+        <div class="list-group list-group-flush list">
+            <a href="/admin" class="list-group-item list-group-item-action" id="dashboardLink"
+               th:classappend="${#httpServletRequest.getRequestURI() == '/admin' ? 'current':''}">Dashboard</a>
+            <a href="/event" class="list-group-item list-group-item-action" id="newEventLink"
+               th:classappend="${#httpServletRequest.getRequestURI() == '/event' ? 'current':''}">Create new event</a>
+            <a href="/customers" class="list-group-item list-group-item-action" id="customersLink"
+               th:classappend="${#httpServletRequest.getRequestURI() == '/customers' ? 'current':''}">Customers</a>
+            <a href="/service" class="list-group-item list-group-item-action" id="servicesLink"
+               th:classappend="${#httpServletRequest.getRequestURI() == '/service' ? 'current':''}">Services</a>
+            <a href="/cars" class="list-group-item list-group-item-action" id="carsLink"
+               th:classappend="${#httpServletRequest.getRequestURI() == '/cars' ? 'current':''}">Cars</a>
+            <a href="/emailPage" class="list-group-item list-group-item-action" id="emailPageLink"
+               th:classappend="${#httpServletRequest.getRequestURI() == '/emailPage' ? 'current':''}">Email</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

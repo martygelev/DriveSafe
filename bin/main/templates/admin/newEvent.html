@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../../static/css/navBars.css" th:href="@{/css/navBars.css}">
+
+    <style>
+        .new-event-form {
+            margin: 50px;
+            padding: 20px;
+        }
+
+        #servicesCart {
+            height: 400px;
+            max-height: 400px;
+            margin-bottom: 10px;
+            overflow: scroll;
+            -webkit-overflow-scrolling: touch;
+        }
+    </style>
+</head>
+<body>
+<div class="d-flex" id="wrapper">
+    <div th:insert="fragments/sidebar.html :: sidebar"></div>
+    <div id="page-content-wrapper">
+        <div th:insert="fragments/header.html :: header"></div>
+<!--        <header th:insert="fragments/general.html :: header"></header>-->
+
+        <div class="new-event-form border">
+            <form id="eventForm">
+                <div class="mainContent row">
+                    <div class="col-sm-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="customerSelect">Customer</label>
+                            </div>
+                            <select class="custom-select" id="customerSelect">
+                                <option selected hidden disabled>Choose a customer...</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="input-group mb-3">
+                            <select class="custom-select" id="customerCarSelect">
+                                <option selected hidden disabled>Choose...</option>
+                            </select>
+                            <div class="input-group-append">
+                                <label class="input-group-text" for="customerCarSelect">Vehicle</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="input-group mb-3 col-8">
+                        <input type="text" class="form-control" placeholder="Search for a service" aria-label="Service"
+                               aria-describedby="basic-addon1">
+                    </div>
+                    <div class="table-responsive col-8">
+                        <table class="table servicesTable">
+                            <thead>
+                            <tr>
+                                <th scope="col">Repair service</th>
+                                <th scope="col">Price</th>
+                                <th scope="col"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="repair : ${repairServices}">
+                                <td th:text="${repair.name}">WheeeelChange</td>
+                                <td th:text="${repair.price}">1000$</td>
+                                <td>
+                                    <button type="button" th:value="${repair.id}" class="addServiceBtn btn btn-info"
+                                            th:attr="data-name=${repair.name}, data-price=${repair.price}" disabled>Add
+                                    </button>
+                                    <button type="button" th:value="${repair.id}"
+                                            class="removeServiceBtn btn btn-warning"
+                                            th:attr="data-id=${repair.id}, data-price=${repair.price}" disabled>Remove
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                    <div class="col-4">
+                        <ul class="list-group border" id="servicesCart">
+
+                        </ul>
+                        <p id="price">$000</p>
+                        <div class="form-group">
+                        <textarea class="form-control rounded-0 comment" id="exampleFormControlTextarea1"
+                                  rows="7"></textarea>
+                        </div>
+
+                    </div>
+                </div>
+
+                <button type="button" class="submitBtn btn btn-primary btn-lg btn-block" disabled>Proceed</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+<div th:insert="fragments/footer.html :: footer"></div>
+
+<script
+        src="https://code.jquery.com/jquery-3.4.0.js"
+        integrity="sha256-DYZMCC8HTC+QDr5QNaIcfR7VSPtcISykd+6eSmBW5qo="
+        crossorigin="anonymous"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap-notify.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        let customerSelect = $("#customerSelect");
+        let carSelect = $("#customerCarSelect");
+        let addedServices = [];
+        let totalPrice = 0;
+        console.log(carSelect.val());
+        console.log(customerSelect.val());
+
+        function Service(id, q, price) {
+            this.serviceId = id;
+            this.quantity = q;
+            this.price = price;
+        }
+
+        function Repair(id) {
+            this.id = id;
+        }
+
+        fillCustomers();
+
+        function enableButtonCheck() {
+            if (customerSelect.val() !== null) {
+                $('.addServiceBtn').each(function () {
+                    $(this).prop('disabled', false);
+
+                });
+                // console.log("yes");
+            }
+        }
+
+
+
+        $('.submitBtn').click(function () {
+            let customerId = customerSelect.val();
+            let carId = carSelect.val();
+            let comment = $('.comment').val();
+
+            let event =
+                {
+                    "customerCar": {
+                        "id": `${carId}`,
+                        "customer": {
+                            "id": `${customerId}`
+                        }
+                    },
+                    "totalPrice": `${totalPrice}`,
+                    "comment": `${comment}`,
+                    "detailedRepairServices": []
+                };
+
+            for (let i = 0; i < addedServices.length; i++) {
+                for (let j = 0; j < addedServices[i].quantity; j++) {
+                    event.detailedRepairServices.push(new Repair(addedServices[i].serviceId));
+                }
+            }
+
+            $.ajax({
+                url: 'http://localhost:5000/r-event/new',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(event),
+                dataType: 'json',
+                success: function () {
+                    console.log('Successfully updated');
+                    location.href = '/admin#newEvent'
+                },
+                error: function () {
+                    console.log('Error updating');
+                }
+            });
+
+        });
+
+
+        function fillCustomers() {
+            let customers = $.parseJSON($.ajax({
+                url: 'http://localhost:5000/customers/get',
+                dataType: "json",
+                async: false
+            }).responseText);
+
+            console.log(customers);
+
+            $.each(customers, function () {
+                customerSelect.append($("<option />").val(this.id).text(this.name));
+            });
+        }
+
+        customerSelect.change(function () {
+            if (customerSelect.val() !== null) {
+                let customerCars = $.parseJSON($.ajax({
+                    url: 'http://localhost:5000/customer-cars/' + customerSelect.val(),
+                    dataType: "json",
+                    async: false
+                }).responseText);
+
+                console.log(customerCars);
+
+                carSelect.find('option').remove().end();
+
+                $.each(customerCars, function () {
+                    let carText = this.car.model.manufacturer.name + ', ' + this.car.model.name + ', ' + this.car.model.year.substr(0, 4) + ', ' + this.car.licensePlate;
+                    carSelect.append($("<option />").val(this.id).text(carText));
+                });
+
+            }
+            enableButtonCheck();
+        });
+
+        $(".addServiceBtn").click(function () {
+
+            let wantedId = $(this).val();
+            let price = $(this).attr('data-price');
+
+            let alreadyOrdered = false;
+
+            if (addedServices.length !== 0) {
+                addedServices.forEach(function (item) {
+                    let service = item.serviceId;
+                    if (service === wantedId) {
+                        alreadyOrdered = true;
+                        return false;
+                    }
+                });
+            }
+
+            if (alreadyOrdered) {
+
+                let countBadge = $(`.order-item[data-id=${wantedId}] span`);
+                countBadge.text(Number(countBadge.text()) + 1);
+
+                addedServices.find(x => x.serviceId === wantedId).quantity++;
+
+            } else {
+                $(`.removeServiceBtn[data-id=${wantedId}]`).prop('disabled', false);
+
+                let id = $(this).val();
+                let price = $(this).attr('data-price');
+                let newService = new Service(id, 1, price);
+                addedServices.push(newService);
+
+                let newServiceItem = $('<li></li>');
+                let serviceCount = $('<span></span>');
+
+                serviceCount.addClass('badge badge-primary badge-pill').text("1");
+                newServiceItem.addClass("order-item list-group-item d-flex justify-content-between align-items-center")
+                    .attr('data-id', id).text($(this).attr("data-name")).append(serviceCount);
+
+                $("#servicesCart").append(newServiceItem);
+            }
+            totalPrice += Number(price);
+            $('#price').text((Math.round(totalPrice * 100) / 100).toFixed(2));
+
+            enableProceedButtonCheck()
+        });
+
+        function enableProceedButtonCheck(){
+            if (addedServices.length !== 0 && carSelect.val() !== null && customerSelect.val() !== null) {
+                $('.submitBtn').prop('disabled', false);
+            }
+            else $('.submitBtn').prop('disabled', true);
+        }
+
+        $('.removeServiceBtn').click(function () {
+            let wantedId = $(this).val();
+            let price = $(this).attr('data-price');
+
+            let countBadge = $(`.order-item[data-id=${wantedId}] span`);
+            let currentCount = Number(countBadge.text());
+
+            if (currentCount === 1) {
+                $(`#servicesCart li[data-id='${wantedId}']`).remove();
+                $(`.removeServiceBtn[data-id=${wantedId}]`).prop('disabled', true);
+
+                let elementInArray = addedServices.find(x => x.serviceId === wantedId);
+
+                addedServices.splice(addedServices.indexOf(elementInArray), 1);
+            } else {
+                let newQuantity = addedServices.find(x => x.serviceId === wantedId).quantity--;
+                countBadge.text(newQuantity - 1);
+            }
+
+            totalPrice -= Number(price);
+            $('#price').text((Math.round(totalPrice * 100) / 100).toFixed(2));
+
+            enableProceedButtonCheck()
+        });
+
+        $('.search').on('keyup', function () {
+            const searchTerm = $(this).val().toLowerCase();
+
+            $('.servicesTable tbody tr').each(function () {
+                const lineStr = $(this).text().toLowerCase();
+
+                if (lineStr.indexOf(searchTerm) === -1) {
+                    $(this).hide();
+                } else {
+                    $(this).show();
+                }
+            });
+        });
+    })
+</script>
+</body>
+</html>

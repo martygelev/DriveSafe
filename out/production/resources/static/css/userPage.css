@@ -1,0 +1,509 @@
+.border-r-7 {
+	border: 1px solid lightgray;
+	border-radius: 7px;
+}
+
+.userProfile,
+.summaryBox {
+	height: 200px;
+	padding: 5px;
+	margin: 5px;
+}
+
+.contentBox {
+	height: 500px;
+}
+
+html {
+	overflow-x: hidden;
+
+}
+
+body {
+	font-size: 14px;
+	height: 100%;
+	width: 100%;
+}
+
+a a:focus {
+	outline: none;
+}
+
+ul, ol {
+	list-style: outside none none;
+	margin: 0;
+	padding: 0;
+}
+
+ul li, ol li {
+	list-style: none;
+}
+
+.g-blue {
+	background-color: blue;
+}
+
+.g-green {
+	background-color: green;
+}
+
+.g-purple {
+	background-color: purple;
+}
+
+.g-non-atteint {
+	color: #0bbb0b;
+}
+
+.g-atteint {
+	color: #1e32ee;
+}
+
+.g-alerte {
+	color: #ff9955;
+}
+
+#g-profile-img {
+	border: 5px solid #fff;
+	position: absolute;
+	width: 100px;
+	height: 100px;
+	margin-left: auto;
+	top: 100px;
+}
+
+.g-action {
+	margin: 0 5px;
+}
+
+.g-action:hover {
+	color: #0dcdbd;
+}
+
+.user-profile-box {
+	background: #ffffff;
+	margin: 0 auto 50px;
+	height: 200px;
+}
+
+.user-profile-box .header {
+	padding: 30px 20px 70px;
+	text-align: center;
+	position: relative;
+	background-repeat: no-repeat;
+	border: none;
+	margin-bottom: -10px;
+	/* color: #ffffff; */
+	max-height: 50px;
+}
+
+.user-profile-box .header h2 {
+	text-shadow: 0 0 2px #AAAA;
+	margin: 0 0 8px;
+	font-size: 24px;
+}
+
+.user-profile-box .profile-img {
+	background-clip: padding-box;
+	float: left;
+	height: 200px;
+	width: 200px;
+	margin-left: 0;
+	position: absolute;
+	box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.1), 0 3px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.user-profile-box .detail {
+	padding-top: 50px;
+}
+
+.user-profile-box .detail ul li {
+	color: #727272;
+	border-bottom: 1px solid #f5f5f5;
+	padding: 12px 20px;
+	display: block;
+	font-size: 14px;
+	font-weight: 500;
+}
+
+.dashborad-box {
+	padding: 55px 30px 30px;
+}
+
+.dashborad-box,
+.user-profile-box {
+	margin-top: 50px;
+}
+
+.dashborad-box .title {
+	position: relative;
+}
+
+.dashborad-box .item {
+	margin-bottom: 20px;
+}
+
+.dashborad-box .item .icon {
+	float: left;
+	width: 50px;
+	position: relative;
+}
+
+.dashborad-box .item .icon:before {
+	position: absolute;
+	content: '';
+	top: 0;
+	right: 0;
+	height: 100%;
+	width: 1px;
+	background: #d7d7d7;
+}
+
+.dashborad-box .item .icon span {
+	font-size: 32px;
+}
+
+.dashborad-box .item .info {
+	padding-left: 20px;
+	float: left;
+}
+
+.dashborad-box .item .info .number {
+	font-size: 16px;
+	font-weight: 700;
+	margin: 0;
+	color: #272727;
+}
+
+.dashborad-box .item .info .type {
+	font-size: 14px;
+	color: #888;
+}
+
+.dashborad-box .item:after {
+	display: table;
+	content: "";
+	clear: both;
+}
+
+.listing-table .table thead tr .rating span {
+	background: #f3f3f3;
+	padding: 0 3px;
+	border-radius: 4px;
+}
+
+.listing-table .table thead tr .status .active {
+	background: #f3f3f3;
+	color: #ffffff;
+	padding: 0 3px;
+	border-radius: 4px;
+}
+
+.listing-table .table thead tr .status .non-active {
+	background: #d7d7d7;
+	padding: 0 3px;
+	border-radius: 4px;
+}
+
+.listing-table .table thead tr .edit a span {
+	color: #0dcdbd !important;
+}
+
+.listing-table .table thead tr th {
+	margin-bottom: 0;
+	border: none;
+}
+
+.messages .message {
+	margin-top: 30px;
+}
+
+.messages .message:after {
+	display: table;
+	content: '';
+	clear: both;
+}
+
+.messages .message .thumb {
+	height: 120px;
+	width: 120px;
+	float: left;
+	border-radius: 4px;
+	overflow: hidden;
+}
+
+.messages .message .body {
+	position: relative;
+	float: left;
+	width: calc(100% - 120px);
+	padding-left: 20px;
+}
+
+.messages .message .body h6 {
+	font-size: 18px;
+}
+
+.messages .message .body h6 .badge {
+	background: #0dcdbd;
+	color: #ffffff;
+}
+
+.messages .message .body .post-time {
+	margin-bottom: 0;
+	color: #0dcdbd;
+}
+
+.messages .message .body .controller {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+.messages .message .body .controller ul li {
+	display: inline-block;
+	margin-left: 6px;
+}
+
+.messages .message .body .controller ul li a {
+	color: #888;
+}
+
+.messages .message .body .controller ul li a:hover {
+	color: #0dcdbd;
+}
+
+.review {
+	margin-top: 30px;
+	display: inline-block;
+}
+
+.review .thumb {
+	height: 120px;
+	width: 120px;
+	float: left;
+	border-radius: 4px;
+	overflow: hidden;
+}
+
+.review .thumb:after {
+	display: table;
+	content: '';
+	clear: both;
+}
+
+.review .body {
+	position: relative;
+	float: left;
+	width: calc(100% - 120px);
+	padding-left: 20px;
+}
+
+.review .body h6 .stars {
+	margin-left: 10px;
+	font-size: 1rem;
+}
+
+.review .body h6 .stars i {
+	color: #fcc200;
+}
+
+.review .body .post-time {
+	margin-bottom: 0;
+	color: #0dcdbd;
+}
+
+.review .body .controller {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+.review .body .controller ul li {
+	display: inline-block;
+	margin-left: 6px;
+}
+
+.review .body .controller ul li a {
+	color: #888;
+}
+
+.review .body .controller ul li a:hover {
+	color: #0dcdbd;
+}
+
+.password-section {
+	margin-top: 20px;
+}
+
+.password-section h6 {
+	margin-bottom: 10px;
+	color: #0dcdbd;
+}
+
+.user-profile-box .detail ul li a {
+	color: #727272;
+	border-bottom: 1px solid #f5f5f5;
+	padding: 12px 20px;
+	display: block;
+	font-size: 14px;
+	font-weight: 500;
+}
+
+.user-profile-box .detail ul li a i {
+	margin-right: 10px;
+}
+
+.user-profile-box .detail ul li .active {
+	background: #fafafa;
+	color: #0dcdbd;
+	font-weight: 500;
+}
+
+.user-profile-box .detail ul li a:hover {
+	background: #fafafa;
+	color: #0dcdbd;
+}
+
+.my-address {
+	background: #FFFFFF;
+	box-shadow: 0 0 20px rgba(38, 38, 38, 0.2);
+	padding: 30px;
+}
+
+select {
+	border: 0;
+	font-size: 14px;
+	width: 100%;
+	line-height: 30px;
+	padding: 0 15px;
+	color: #727272;
+	background: #ffffff;
+	z-index: 1;
+	width: 100%;
+	position: relative;
+	appearance: none;
+	-moz-appearance: none;
+	-webkit-appearance: none;
+	position: relative;
+	min-height: 45px;
+	box-shadow: none;
+	border: 1px solid #f3f3f3;
+	background: #fff;
+	border-radius: 4px;
+	width: 100% !important;
+	cursor: pointer;
+}
+
+select:focus {
+	outline: none;
+	box-shadow: none;
+}
+
+#portfolio-section .mix {
+	padding: 10px;
+}
+
+#portfolio .mix {
+	display: none;
+}
+
+.controls {
+	text-align: center;
+	padding: 0 0 20px;
+}
+
+.controls .active {
+	color: #0dcdbd !important;
+	border-color: #0dcdbd;
+	background: transparent;
+}
+
+.controls .btn {
+	text-transform: uppercase;
+	margin: 2px;
+	color: #fff;
+}
+
+.controls:hover {
+	cursor: pointer;
+}
+
+a:not([href]):not([tabindex]),
+a:not([href]):not([tabindex]):focus, a:not([href]):not([tabindex]):hover {
+	color: #fff;
+}
+
+#portfolio-section {
+	position: relative;
+}
+
+#portfolio-section .portfolio-box {
+	position: relative;
+}
+
+#portfolio-section .portfolio-box .overlay-box {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	padding-top: 25%;
+	opacity: 0;
+	-webkit-transition: all 500ms ease;
+	-moz-transition: all 500ms ease;
+	-ms-transition: all 500ms ease;
+	-o-transition: all 500ms ease;
+	transition: all 500ms ease;
+}
+
+#portfolio-section .portfolio-box .overlay-box a {
+	color: #ffffff;
+	font-size: 16px;
+	width: 50px;
+	height: 50px;
+	display: inline-block;
+	line-height: 50px;
+	background: #0dcdbd;
+	border-radius: 4px;
+	transform: scale(0, 0);
+	-webkit-transform: scale(0, 0);
+	-moz-transform: scale(0, 0);
+	-ms-transform: scale(0, 0);
+	-o-transform: scale(0, 0);
+	-webkit-transition: all 0.5s;
+	-moz-transition: all 0.5s;
+	-o-transition: all 0.5s;
+	transition: all 0.5s;
+}
+
+#portfolio-section .portfolio-box .overlay-box h3 {
+	margin-top: 20px;
+	color: #fff;
+	font-size: 22px;
+	-webkit-transform: translateY(20px);
+	-moz-transform: translateY(20px);
+	transform: translateY(20px);
+	-webkit-transition: all 0.5s;
+	-moz-transition: all 0.5s;
+	-o-transition: all 0.5s;
+	transition: all 0.5s;
+}
+
+#portfolio-section .portfolio-box:hover .overlay-box {
+	background: rgba(0, 0, 0, 0.85);
+	transform: scale(1, 1);
+	opacity: 1;
+}
+
+#portfolio-section .portfolio-box:hover .overlay-box h3 {
+	-webkit-transform: translateY(0px);
+	-moz-transform: translateY(0px);
+	transform: translateY(0px);
+}
+
+#portfolio-section .portfolio-box:hover .overlay-box a {
+	-webkit-transform: scale(1, 1);
+	-moz-transform: scale(1, 1);
+	-ms-transform: scale(1, 1);
+	-o-transform: scale(1, 1);
+}

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div th:fragment="newCustomerPopup">
+    <div id="popup1">
+        <div>
+            <form name="userForm" id="form" th:action="@{/customers/register}" th:object="${user}" method="post">
+
+                <label for="email"><b>Email</b></label>
+                <input id="email" type="text" th:field="*{email}"/>
+
+                <label for="name"><b>Name</b></label>
+                <input name="name" id="name" type="text" th:field="*{name}"/>
+
+                <label for="phone"><b>Phone</b></label>
+                <input id="phone" type="text" th:field="*{phone}"/>
+
+
+                <button type="submit" id="regBtn"
+                        class="btn btn-primary block full-width m-b" onclick="regBtn()">Register
+                </button>
+                <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+
+            </form>
+        </div>
+    </div>
+
+
+</div>
+
+<div th:fragment="newCar">
+    <div id="newCarPopUp">
+    <form class="form-signin" role="form" form method="POST" enctype="multipart/form-data" action="/cars/newCar"
+          th:object="${car}">
+
+
+        <div class="col-sm-6">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="customerSelect">Customer</label>
+                </div>
+                <select class="custom-select" id="customerSelect">
+                    <option selected hidden disabled>Choose a customer</option>
+                </select>
+            </div>
+        </div>
+
+
+        <div class="col-sm-6">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="makeSelect">Make</label>
+                </div>
+                <select class="makeSelect" id="makeSelect">
+                    <option selected hidden disabled>Choose a make</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="modelSelect">Model</label>
+                </div>
+                <select class="modelSelect" id="modelSelect">
+                    <option selected hidden disabled>Choose a model</option>
+                </select>
+            </div>
+        </div>
+
+<!--        <div class="form-row">-->
+<!--            <div class="col">-->
+<!--                <div class="form-label-group">-->
+<!--                    <label for="vin"></label><input th:field="*{vin}" id="vin" class="form-control" placeholder="vin"/>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <div class="form-row">-->
+
+<!--            <div class="col">-->
+<!--                <div class="input-group mb-3">-->
+<!--                    <label for="licensePlate"></label><input type="text" th:field="*{licensePlate}" id="licensePlate"-->
+<!--                                                             class="form-control" placeholder="licensePlate">-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+        <button id="registerBtn" class="btn btn-lg btn-primary btn-block shadow-none text-uppercase"
+                type="submit">
+            Create
+        </button>
+    </form>
+</div>
+</div>
+
+</body>
+</html>

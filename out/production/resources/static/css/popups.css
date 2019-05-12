@@ -1,0 +1,48 @@
+#assignNewCarPopup input, select {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	width: 100%;
+}
+
+#assignNewCarPopup {
+	width: 300px;
+	max-width: 350px;
+	max-height: 500px;
+	border: 1px solid gray;
+	padding: 25px;
+	background: white;
+	border-radius: 15px;
+}
+
+#newCustomerPopup {
+	width: 250px;
+	max-width: 250px;
+	height: 320px;
+	max-height: 300px;
+	border: 1px solid gray;
+	border-radius: 15px;
+	padding: 5px 5px 5px 5px;
+}
+
+#newCustomerPopup #content {
+	border: 1px solid gray;
+	padding: 40px 10px 10px 10px;
+	border-radius: 15px;
+	background: white;
+	height: 350px;
+	width: 300px;
+}
+
+#editCustomerPopUp,
+#editCarPopUp{
+	width: 300px;
+	max-width: 300px;
+	height: 300px;
+	max-height: 300px;
+	border: 1px solid gray;
+	border-radius: 15px;
+	background: white;
+	padding: 25px;
+}
+

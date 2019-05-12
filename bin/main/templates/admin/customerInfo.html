@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+          integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="../../static/css/navBars.css" th:href="@{/css/navBars.css}">
+</head>
+<body>
+<div id="page">
+    <div class="d-flex" id="wrapper">
+
+        <div th:insert="fragments/sidebar.html :: sidebar"></div>
+
+             <div id="page-content-wrapper">
+
+                 <div th:insert="fragments/header.html :: header"></div>
+
+                <header th:insert="fragments/general.html :: header"></header>
+                <button style="border-radius: 20px">Edit customer</button>
+    <br/>
+           Name: <p th:text="${customer.name}"></p>
+    <br/>
+       Phone number: <p th:text="${customer.phone}"></p>
+        <br/>
+          Email  <p th:text="${customer.email}"></p>
+
+
+        <br/>
+        <br/>
+<!--        <button id="newCarBtn" class="new-car-btn" data-target="#newCar" data-whatever="@newCar">>Add New Car</button>-->
+<!--        <div th:insert="fragments/newCar.html :: header"></div>-->
+
+
+                 <button class="newCarPopUp_open"> New Car </button>
+
+<!--        $(butona).click{function(-->
+<!--        //promenliva za customer - name/id-->
+<!--        //ajax za marki-->
+
+<!--        )}-->
+
+        <div>
+            <div th:each="car : ${cars}">
+                <div th:insert="fragments/carCard.html
+                :: card(id=${car.getCar().getId()},make = ${car.getCar().getModel().getManufacturer().getName()},model=${car.getCar().getModel().getName()},
+                vin=${car.getCar().getVin()}, licensePlate=${car.getCar().getLicensePlate()})"></div>
+            </div>
+        </div>
+<!--            <div th:each="customer : ${customers}">-->
+<!--                <div th:insert="fragments/customerCard.html-->
+<!--                :: card(id = ${customer.id}, name=${customer.name},-->
+<!--                email=${customer.getEmail()}, phone=${customer.getPhone()})"></div>-->
+<!--            </div>-->
+
+        </div>
+    </div>
+
+
+        <div th:insert="fragments/footer.html :: footer"></div>
+        <div th:insert="fragments/popups.html :: newCar"></div>
+
+</div>
+
+<section id="newCarPopUp_open">
+
+<!--    <div th:insert="admin/newCar.html :: newCar"></div>-->
+</section>
+
+<script
+        src="https://code.jquery.com/jquery-3.4.0.js"
+        integrity="sha256-DYZMCC8HTC+QDr5QNaIcfR7VSPtcISykd+6eSmBW5qo="
+        crossorigin="anonymous"></script>
+
+<script src="https://cdn.jsdelivr.net/gh/vast-engineering/jquery-popup-overlay@2/jquery.popupoverlay.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    $(document).ready(function(){
+             $('#newCarPopUp').popup({onopen : function () {
+                     let makeSelect = $("#makeSelect");
+                     let modelSelect = $("#modelSelect");
+
+                     fillMake();
+                     // function fillCustomers() {
+                     //     let customers = $.parseJSON($.ajax({
+                     //         url: 'http://localhost:5000/customers/get',
+                     //         dataType: "json",
+                     //         async: false
+                     //     }).responseText);
+                     //
+                     //     console.log(customers);
+                     //
+                     //     $.each(customers, function () {
+                     //         customerSelect.append($("<option />").val(this.id).text(this.name));
+                     //     });
+                     // }
+
+                     function fillMake(){
+                         let make = $.parseJSON($.ajax({
+                             url:'http://localhost:5000/make',
+                             dataType: 'json',
+                             async: false
+                         }).responseText);
+
+                         console.log(make);
+
+                         $.each(make, function () {
+                             makeSelect.append($("<option/>").val(this.name).text(this.name));
+                         })
+                     }
+
+                     makeSelect.change(function () {
+                            modelSelect.empty();
+
+                             let model = $.parseJSON($.ajax({
+                                 url:'http://localhost:5000/model/' + makeSelect.val(),
+                                 dataType: 'json',
+                                 async: false
+                             }).responseText);
+
+                             console.log(model);
+
+                             $.each(model, function () {
+                                 modelSelect.append($("<option/>").val(this.id).text(this.name));
+                             })
+                     });
+
+                     // customerSelect.change(function () {
+                     //     if (customerSelect.val() !== null) {
+                     //         let customerCars = $.parseJSON($.ajax({
+                     //             url: 'http://localhost:5000/customer-cars/' + customerSelect.val(),
+                     //             dataType: "json",
+                     //             async: false
+                     //         }).responseText);
+                     //
+                     //         carSelect.find('option').remove().end();
+                     //
+                     //         $.each(customerCars, function () {
+                     //             let carText = this.car.model.manufacturer.name + ', ' + this.car.model.name + ', ' + this.car.model.year.substr(0, 4) + ', ' + this.car.licensePlate;
+                     //             carSelect.append($("<option />").val(this.id).text(carText));
+                     //         });
+                     //     }
+                     //     console.log(makeSelect.val());
+                     //     console.log(modelSelect.val());
+                     // });
+
+                 }});
+
+    });
+
+</script>
+</body>
+
+</html>

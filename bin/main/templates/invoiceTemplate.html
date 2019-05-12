@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <!--    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet"/>-->
+    <meta charset="utf-8"/>
+    <title th:text="${'Invoice # ' + event.id}">Event ID</title>
+    <style type="text/css" media="all">
+
+        .column {
+            float: left !important;;
+            width: 50% !important;;
+            flex: 50% !important;;
+
+        }
+
+        @font-face {
+            font-family: 'Raleway', sans-serif;
+            src: url(../static/fonts/Raleway.ttf);
+            -fs-pdf-font-embed: embed;
+            -fs-pdf-font-encoding: Identity-H;
+        }
+
+        .invoice {
+            font-family: 'Raleway', serif !important;
+            font-size: 1.5vw;
+        }
+
+        .content {
+            width: 100%;
+            line-height: inherit;
+            text-align: left;
+        }
+
+        .invoice-box .content td {
+            padding: 5px;
+            vertical-align: top;
+        }
+
+        .invoice-box .content tr td:nth-child(2) {
+            text-align: right;
+        }
+
+        .invoice-box .content tr.top .content td {
+            padding-bottom: 20px;
+        }
+
+        .invoice-box .content tr.information .content td {
+            padding-bottom: 40px;
+        }
+
+        .invoice-box .content tr.heading th {
+            border-bottom: 2px solid #ddd;
+            border-top: 2px solid #ddd;
+            border-left: 0;
+            border-right: 0;
+            font-weight: bold;
+            font-size: 22px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            color: #8edbdb;
+        }
+
+        .invoice-box .content tr.details td {
+            padding-bottom: 20px;
+        }
+
+        .invoice-box .content tr.item td {
+            border-bottom: 1px solid #eee;
+            font-size: medium;
+            font-style: italic;
+        }
+
+        .invoice-box .content tr.item.last td {
+            border-bottom: none;
+        }
+
+        .invoice-box .content tr.total td:nth-child(2) {
+            border-top: 2px solid #eee;
+            font-weight: bold;
+        }
+
+        .rtl .content {
+            text-align: right;
+        }
+
+        .rtl .content tr td:nth-child(2) {
+            text-align: left;
+        }
+
+        .container {
+            padding: 80px 50px 30px 50px;
+        }
+
+        .line-space {
+            line-height: 0.3em;
+        }
+
+        .field-title {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .section-title {
+            font-weight: bold;
+            font-size: large;
+        }
+
+        h1 {
+            color: #8edbdb;
+            font-size: 3em !important;
+        }
+
+        .content tr:nth-child(even) {
+            background: #eeeeee
+        }
+
+        .content tr:nth-child(odd) {
+            background: #FFF
+        }
+
+        table {
+            padding-top: 45px;
+        }
+
+        @page {
+            size: 11.5in 11in !important;
+        }
+
+        .company {
+            border-collapse: collapse;
+            text-align: left;
+            width: 100%;
+        }
+
+
+        .info {
+            border-collapse: collapse;
+            text-align: left;
+            width: 100%;
+        }
+
+        .info td, table th {
+            border: 3px solid #8edbdb;
+            /*border-radius: 10px;*/
+        }
+
+        .info tr:first-child th {
+            border-top: 0;
+        }
+
+        .info tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .info tr td:first-child,
+        .info tr th:first-child {
+            border-left: 0;
+            border-top: 0;
+            border-bottom: 0;
+        }
+
+        .info tr td:last-child,
+        .info tr th:last-child {
+            border-right: 0;
+            border-top: 0;
+            border-bottom: 0;
+        }
+
+
+    </style>
+</head>
+<body style="min-width: 21.5cm">
+
+<div class="invoice-box invoice">
+    <div class="container">
+        <div class="line-space">
+            <h1>INVOICE</h1>
+            <hr style="height:4px;border:none;color:#8edbdb;background-color:#8edbdb;"/>
+        </div>
+
+        <table class="company">
+            <tr>
+                <td style="width: 50%; min-width: 300px">
+                    <div class="column line-space" style="float: left;width: 50%;flex: 50%;">
+                        <p><span STYLE="font-size: x-large">Drive Safe</span></p>
+                    </div>
+                </td>
+                <td style="width: 50%;">
+                    <div class="column line-space" style="float: left;width: 50%;flex: 50%;">
+                        <p><span class="field-title">Invoice No:</span><span th:text="${' ' + event.id}"> 1244223</span>
+                        </p>
+                        <p><span class="field-title">Date:</span><span th:text="${' ' + event.date}"> 12/12/2014</span>
+                        </p>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <table class="info">
+            <tr>
+                <th><span class="section-title ">Customer Information:</span></th>
+                <th><span class="section-title">Car Information:</span></th>
+            </tr>
+            <tr>
+                <td style="width: 50%;">
+                    <div class="column line-space algn-btm-lf" style="float: left;width: 50%;flex: 50%;">
+                        <p></p>
+                        <br/>
+                        <p><span class="field-title">Name:</span><span th:text="${' ' + customer.name}"> 1244223</span>
+                        </p>
+                        <p><span class="field-title">E-mail:</span><span
+                                th:text="${' ' + customer.email}"> 1244223</span></p>
+                    </div>
+                </td>
+                <td style="width: 50%;">
+                    <div class="column line-space" style="padding-left: 6px;float: left;width: 50%;flex: 50%;">
+                        <p></p>
+                        <br/>
+                        <p><span class="field-title">Make:</span><span
+                                th:text="${' ' + customerCar.getCar().getModel().getManufacturer().name}"> Ford</span>
+                        </p>
+                        <p><span class="field-title">Model:</span><span
+                                th:text="${' ' + customerCar.getCar().getModel().getName()}"> Cortina</span></p>
+                        <p><span class="field-title">Year:</span><span
+                                th:text="${' ' + customerCar.getCar().getModel().getYear()}"> 1883</span></p>
+                        <p><span class="field-title">License Plate:</span><span
+                                th:text="${' ' + customerCar.getCar().getLicensePlate()}"> CH3604AC</span></p>
+                        <p><span class="field-title">vin:</span><span th:text="${' ' + customerCar.getCar().getVin()}"> 1231231231231213</span>
+                        </p>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <table class="content">
+
+
+            <tr class="heading">
+                <th>Item</th>
+                <th align="right">Price</th>
+            </tr>
+
+            <tr class="item" th:each="service : ${services}">
+                <!--                <td th:text="${service.id}">ID</td>-->
+                <td th:text="${service.name}">name</td>
+                <td th:text="${service.price}">value</td>
+            </tr>
+
+            <tr class="total">
+                <td></td>
+                <td><span th:text="${' $' + totalPrice}">Total: $385.00</span></td>
+            </tr>
+
+        </table>
+    </div>
+</div>
+</body>
+</html>

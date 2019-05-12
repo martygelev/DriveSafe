@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>All customers</title>
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/navBars.css">
+    <link rel="stylesheet" href="/css/animate.css">
+    <link rel="stylesheet" href="/css/popups.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        .mainContent {
+            margin: 50px;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+<div id="page">
+    <div class="d-flex" id="wrapper">
+        <div th:insert="fragments/sidebar.html :: sidebar"></div>
+        <div id="page-content-wrapper">
+            <div th:insert="fragments/header.html :: header"></div>
+
+
+            <div class="mainContent">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-primary newCustomerPopup_open"
+                                        type="button" id="newCustomerBtn">Create new
+                                </button>
+                            </div>
+                            <input type="text" class="form-control" id="myInput" placeholder="Search for customers...">
+                            <div>
+                                <form method="get" th:action="@{/customers/all}">
+                                    <button type="submit" class="btn btn-outline-warning">Show deleted</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div th:if="${#httpServletRequest.getRequestURI() == '/customers/all' }">
+                    <div th:each="customer : ${customers}">
+                        <div th:if="${customer.isDeleted() == true}">
+                            <div th:insert="fragments/customerCard.html::
+                    deletedCustomerCard(id = ${customer.id},
+                    name=${customer.name},
+                    email=${customer.getEmail()},
+                    phone=${customer.getPhone()})"></div>
+                        </div>
+                        <div th:if="${customer.isDeleted() == false}">
+                            <div th:insert="fragments/customerCard.html::
+                    card(id = ${customer.id},
+                    name=${customer.name},
+                    email=${customer.getEmail()},
+                    phone=${customer.getPhone()})"></div>
+                        </div>
+                    </div>
+                </div>
+                <div th:if="${#httpServletRequest.getRequestURI() == '/customers' }">
+                    <div th:each="customer : ${customers}">
+                        <div th:insert="fragments/customerCard.html::
+                    card(id = ${customer.id},
+                    name=${customer.name},
+                    email=${customer.getEmail()},
+                    phone=${customer.getPhone()})"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:insert="fragments/footer.html :: footer"></div>
+<div th:insert="fragments/popups.html :: newCustomerPopup"></div>
+<div th:insert="fragments/popups.html :: editCustomerPopUp"></div>
+
+<script src="/js/jquery-3.4.0.min.js"></script>
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-popup-overlay/2.1.1/jquery.popupoverlay.min.js"></script>
+<script type="module" src="/js/popups.js"></script>
+<script src="/js/bootstrap-notify.min.js"></script>
+
+<script>
+    let clickedCustomerId;
+    let clickedCustomerName;
+    let clickedCustomerPhone;
+    $(document).ready(function () {
+
+        $('.deleteCustomerBtn').click(function () {
+            let selectedCustomerId;
+            let selectedCustomerName;
+            let parent = $(this).closest('.card');
+            selectedCustomerId = Number($(this).attr('data-customerId'));
+            selectedCustomerName = $(this).closest('.card-body').find('h5').text();
+
+            if (confirm(`Are you sure you want to delete ${selectedCustomerName}?`)) {
+                $.ajax({
+                    url: '/r-customers/remove',
+                    type: 'PUT',
+                    data: {customerId: selectedCustomerId},
+                    success: function () {
+                        $.notify({
+                            message: "Customer deleted successfully."
+                        }, {
+                            type: 'success',
+                            delay: 4000
+                        });
+
+                        parent.hide('slow', function () {
+                            parent.remove();
+                        });
+
+                    },
+                    error: function () {
+                        $.notify({
+                            message: "Error while trying to delete customer."
+                        }, {
+                            type: 'danger',
+                            delay: 4000
+                        });
+                    }
+                })
+            }
+        })
+
+
+        $('.editCustomerBtn').click(function () {
+            clickedCustomerId = $(this).attr('data-customerId');
+            clickedCustomerName = $(this).closest('.card-body').find('h5').text();
+            clickedCustomerPhone = $(this).closest('.card-body').find('p.card-text').text();
+        })
+
+        $('#newCustomerPopup').popup({
+            transition: 'all 0.3s'
+        });
+
+        $("#myInput").on("keyup", function () {
+
+            let value = $(this).val();
+            $(".mainContent .card").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+
+        });
+
+        $('#regBtn').click(function () {
+            submitNewCustomer();
+        })
+
+        $('#editCustomerPopUp').popup({
+            onopen: function () {
+                $('#editCustomerPopUp #custName').val(clickedCustomerName);
+                $('#editCustomerPopUp #phoneNumber').val(clickedCustomerPhone);
+                let name = $('#custName');
+                let phone = $('#phoneNumber');
+
+                let pathname = window.location.pathname;
+                let n = pathname.lastIndexOf('/');
+                let id = pathname.substring(n + 1);
+
+                console.log(name + " " + phone + ' ' + id);
+                $('#updateCustomer').on('click', function () {
+
+                    $.ajax({
+                        url: '/r-customers/editInfo/' + clickedCustomerId + '/' + phone.val() + '/' + name.val(),
+                        type: 'PUT',
+                        success: function () {
+                            location.reload()
+                        },
+                        error: function () {
+                            $.notify({
+                                message: "Error updating customer info."
+                            }, {
+                                type: 'danger',
+                                allow_dismiss: false,
+                                delay: 3000
+                            });
+                        }
+                    })
+
+                })
+            }
+        });
+
+        $('.restoreCustomerBtn').click(function () {
+            console.log("clicked")
+            $.ajax({
+                url: '/r-customers/restore',
+                type: 'PUT',
+                data: {customerId: $(this).attr('data-customerId')},
+                success: function () {
+                    window.location = '/customers';
+
+                },
+                error: function () {
+                    $.notify({
+                        message: "Error while trying to restore customer."
+                    }, {
+                        type: 'danger',
+                        delay: 4000
+                    });
+                }
+            })
+        })
+
+    });
+
+</script>
+</body>
+</html>

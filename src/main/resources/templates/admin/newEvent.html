@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <meta charset="UTF-8">
+    <title>Create new event</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/navBars.css">
+    <link rel="stylesheet" href="/css/animate.css">
+    <link rel="stylesheet" href="/css/popups.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        .new-event-form {
+            margin: 50px;
+            padding: 20px;
+        }
+
+        .removeServiceBtn {
+            float: right;
+        }
+
+        .serviceComment {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="d-flex" id="wrapper">
+    <div th:insert="fragments/sidebar.html :: sidebar"></div>
+    <div id="page-content-wrapper">
+        <div th:insert="fragments/header.html :: header"></div>
+
+
+        <div class="new-event-form border">
+            <form id="eventForm">
+                <div class="mainContent row">
+
+                    <div class="col-sm-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-primary newCustomerPopup_open"
+                                        type="button" id="newCustomerBtn">Create new
+                                </button>
+                            </div>
+                            <select class="custom-select" id="customerSelect">
+                                <option selected hidden disabled>Choose a customer...</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="col-sm-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-primary assignNewCarPopup_open" type="button"
+                                        id="assignCarBtn">Assign new
+                                </button>
+                            </div>
+                            <select class="custom-select" id="customerCarSelect">
+                                <option selected hidden disabled>Choose a car...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="input-group mb-3 col-12">
+                        <select class="custom-select" id="serviceSelect">
+                            <option selected hidden disabled>Choose a service</option>
+                        </select>
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-primary" type="button" id="addServiceButton">Add to order
+                                list
+                            </button>
+                            <button class="btn btn-outline-info newServicePopUp_open" type="button"
+                                    id="createNewServiceBtn">Create new
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive col-12">
+                        <table class="table servicesTable" id="addedServices">
+                            <thead>
+                            <tr>
+                                <th scope="col" class="text-left">Repair service</th>
+                                <th scope="col" style="padding-left: 50px">Price</th>
+                                <th scope="col" style="text-align: center">Comment</th>
+                                <th scope="col" class="text-right">Remove</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="input-group col-8">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Comment</span>
+                        </div>
+                        <textarea class="form-control" id="eventComment" aria-label="Comment"></textarea>
+                    </div>
+                    <div class="col-4">
+                        <div class="alert alert-info text-right font-italic">
+                            <span>Total price:</span><span id="totalPrice"> 0.00$</span>
+                        </div>
+                        <button type="button" class="submitBtn btn btn-success btn-lg btn-block" disabled>Proceed
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+<div th:insert="fragments/footer.html :: footer"></div>
+<div th:insert="fragments/popups.html :: newCustomerPopup"></div>
+<div th:insert="fragments/popups.html :: assignNewCarPopup"></div>
+<div th:insert="fragments/popups.html :: newServicePopUp"></div>
+<button class="removeServiceBtn btn btn-warning" style="display: none">Remove</button>
+<script src="/js/jquery-3.4.0.min.js"></script>
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script src="/js/bootstrap-notify.min.js"></script>
+<script type="module" src="/js/popups.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-popup-overlay/2.1.1/jquery.popupoverlay.min.js"></script>
+
+</body>
+<script>
+
+    let customerSelect = $("#customerSelect");
+    let carSelect = $("#customerCarSelect");
+
+    function fillCarsForCustomer(id) {
+
+
+        $.ajax({
+            url: '/customer-cars/dto',
+            data: {customerId: id},
+            dataType: "json",
+            success: function (data) {
+                carSelect.find('option').remove().end();
+                console.log(data);
+
+                $.each(data, function () {
+                    let carText = this.model + ', ' + this.make + ', ' + this.year + ', ' + this.licensePlate;
+                    carSelect.append($("<option />").val(this.id).text(carText));
+                });
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        let customerSelect = $("#customerSelect");
+        let carSelect = $("#customerCarSelect");
+        let addedServices = [];
+        let totalPrice = 0;
+
+        fillCustomers();
+        fillServices();
+
+        $('#addServiceButton').click(function () {
+            let repairServiceId = $('#serviceSelect').val();
+            let repairServiceName = $('#serviceSelect option:selected').text();
+            let repairServicePrice = $('#serviceSelect option:selected').attr("data-price");
+
+            let removeButton = $('<button/>', {
+                type: 'button',
+                text: 'remove'
+            })
+                .addClass('removeServiceBtn btn btn-outline-warning')
+                .val(`${repairServiceId}`);
+
+            $('#addedServices > tbody:last-child')
+                .append(`<tr id="${repairServiceId}"><td>${repairServiceName}</td><td >` +
+                    `<input type="number" min="0.00" max="10000" step="0.50" placeholder="${repairServicePrice}"
+                        value="${repairServicePrice}" class="servicePrice text-right"></td><td style="text-align: center">` +
+                    '<input placeholder="Any comments?" class="serviceComment form-control">' +
+                    '</td><td></td></tr>');
+
+            $("#addedServices tr:last").find('td:last').append(removeButton);
+
+            addedServices.push({serviceId: repairServiceId, price: repairServicePrice, comment: "test comment"});
+
+            totalPrice += Number((Math.round(repairServicePrice * 100) / 100).toFixed(2));
+
+            $('#totalPrice').text(totalPrice + '$');
+
+        });
+
+        $(document).on('change', '.servicePrice', function () {
+            let oldPrice = Number($(this).attr('placeholder'));
+            let newPrice = Number($(this).val());
+            totalPrice -= Number((Math.round(oldPrice * 100) / 100).toFixed(2));
+            totalPrice += Number((Math.round(newPrice * 100) / 100).toFixed(2));
+            $('#totalPrice').text(totalPrice + '$');
+            $(this).attr('placeholder', newPrice);
+            $(this).val(newPrice);
+        });
+
+        $(document).on('click', '.removeServiceBtn', function () {
+            let wantedId = $(this).val();
+
+            let elementInArray = addedServices.find(x => x.serviceId === wantedId);
+
+            addedServices.splice(addedServices.indexOf(elementInArray), 1);
+
+            $(this).parent().parent().remove();
+
+            let itemPrice = $(this)
+                .closest("tr")
+                .find(".servicePrice")
+                .val();
+
+            totalPrice -= Number((Math.round(itemPrice * 100) / 100).toFixed(2));
+
+            $('#totalPrice').text(totalPrice + '$');
+
+        });
+
+        customerSelect.change(function () {
+            if (customerSelect.val() !== null) {
+                fillCarsForCustomer(customerSelect.val())
+            }
+        });
+
+
+        $('.submitBtn').click(function () {
+            let carId = carSelect.val();
+            let eventComment = $('#eventComment').val();
+            let finalPrice = 0;
+
+            let event = {
+                "customerCar": {
+                    "id": `${carId}`,
+                },
+                "comment": `${eventComment}`
+            };
+
+            event["detailedRepairServices"] = [];
+            $('#addedServices tbody tr').each(function () {
+
+
+                let serviceId = $(this).attr("id");
+                let servicePrice = $(this).find('.servicePrice').val();
+                let serviceComment = $(this).find('.serviceComment').val();
+                let repair = {
+                    repairService: {
+                        id: serviceId
+                    },
+                    price: servicePrice,
+                    serviceComment: serviceComment
+                };
+
+                finalPrice += Number((Math.round(servicePrice * 100) / 100).toFixed(2));
+                event.detailedRepairServices.push(repair);
+
+            });
+            event["totalPrice"] = finalPrice;
+
+            $.ajax({
+                url: '/r-event/new',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(event),
+                dataType: 'json',
+                success: function () {
+                    location.href = '/admin#newEvent'
+                },
+                error: function () {
+                    $.notify({
+                        message: "Error creating the new event."
+                    }, {
+                        type: 'danger',
+                        allow_dismiss: false,
+                        delay: 7000
+                    });
+                }
+            });
+
+        });
+
+        function fillCustomers() {
+            customerSelect.find('option').remove().end();
+            let customers = $.parseJSON($.ajax({
+                url: '/r-customers/get',
+                dataType: "json",
+                async: false
+            }).responseText);
+
+
+            $.each(customers, function () {
+                customerSelect.append($("<option />").val(this.id).text(this.name));
+            });
+        }
+
+        function fillServices() {
+            $('#serviceSelect').find('option').remove().end();
+            let services = $.parseJSON($.ajax({
+                url: '/r-services',
+                dataType: 'json',
+                async: false
+            }).responseText);
+
+            $.each(services, function () {
+                $('#serviceSelect').append($("<option />").val(this.id).text(this.name + ' - ' + this.price).attr("data-price", this.price));
+            });
+        }
+
+        $('#eventForm input,select,textarea').change(function () {
+            if (addedServices.length === 0) {
+                $('.submitBtn').prop('disabled', true);
+            } else {
+                $('.submitBtn').prop('disabled', false);
+
+            }
+        });
+
+        $('#newServiceBtn').click(function () {
+            submitNewService();
+            setTimeout(fillServices, 2000);
+        });
+
+        $('#regBtn').click(function () {
+            submitNewCustomer();
+            setTimeout(fillCustomers, 3000);
+        });
+
+        $('#createCarBtnSave').click(function () {
+            assignNewCar();
+            setTimeout(function () {
+                if ($('#customerSelect').val() !== null) {
+                    fillCarsForCustomer(customerSelect.val());
+                }
+            }, 1000);
+        });
+
+    })
+
+</script>
+</html>

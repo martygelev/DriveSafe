@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel</title>
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/navBars.css">
+    <link rel="stylesheet" href="/css/animate.css">
+    <link rel="stylesheet" href="/css/popups.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+
+        .card-header {
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .card-header {
+            height: 45px;
+        }
+
+        .finalizedBtn button {
+            margin-top: 8px;
+            margin-right: 10px;
+        }
+
+        .notFinalizedBtn button {
+            margin-top: 8px;
+            margin-right: 10px;
+        }
+
+        .head h6 {
+            margin-top: 12px;
+            margin-left: 10px;
+        }
+
+    </style>
+</head>
+<body>
+<div class="d-flex" id="wrapper">
+    <div th:insert="fragments/sidebar.html :: sidebar"></div>
+    <div id="page-content-wrapper">
+        <div th:insert="fragments/header.html :: header"></div>
+
+        <div class="eventSearch border shadow-sm" style="margin: 50px;padding: 20px;">
+            <div class="mainContent">
+
+                <form id="searchCriteria">
+                    <div class="row">
+                        <div class="col-6 col-sm-6">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <button class="btn btn-outline-primary newCustomerPopup_open"
+                                            type="button" id="newCustomerBtn">Create new
+                                    </button>
+                                </div>
+                                <select class="custom-select" id="customerSelect" name="customer">
+                                    <option selected hidden disabled>Choose a customer...</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="col-6 col-sm-6">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <button class="btn btn-outline-primary assignNewCarPopup_open" type="button"
+                                            id="assignCarBtn">Assign new
+                                    </button>
+                                </div>
+                                <select class="custom-select" id="customerCarSelect" name="customerCar">
+                                    <option selected hidden disabled>Choose a car...</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-4 col-sm-4">
+                            <div class="input-group date" data-provide="datepicker">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" id="datepicker" for="dateFrom">From</label>
+                                </div>
+                                <input type="text" class="form-control" id="dateFrom" value="Any" name="from">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4 col-sm-4">
+                            <div class="input-group date" data-provide="datepicker">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="dateTo">To</label>
+                                </div>
+                                <input type="text" class="form-control" id="dateTo" value="Any" name="to">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-2 col-sm-2">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="finalizedSelect">Finalized</label>
+                                </div>
+                                <select class="custom-select" id="finalizedSelect" name="finalized">
+                                    <option selected>All</option>
+                                    <option>Yes</option>
+                                    <option>No</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-1 col-sm-1 input-group mb-3">
+                            <button class="btn btn-info" id="search">Search</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+
+            <div class="col-12" id="accordion">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-lg-2" id="mockCard" style="display:none;" th:fragment="mockCard">
+    <div class="card-header container-fluid" data-toggle="collapse" data-target="#collapseOne"
+         aria-expanded="true" aria-controls="collapseOne" id="headingOne">
+        <div class="row">
+            <div class="col-md-11 head">
+                <h6>dsdasdsada</h6>
+            </div>
+
+            <div class="btn-group float-right col-md-1 finalizedBtn" style="display: none;">
+                <button type="button" class="btn btn-sm btn-success dropdown-toggle" style="float: right;"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Finalized
+                </button>
+                <div class="dropdown-menu dropdown-menu-right" data-event="">
+                    <a class="dropdown-item getInv" href="javascript:void(0);" target="_blank">Get invoice</a>
+                    <a class="dropdown-item emailInv" href="javascript:void(0);" onclick="sendEmailWithInvoice(1)">Send
+                        email with
+                        invoice</a>
+                </div>
+            </div>
+
+            <div class="btn-group float-right col-md-1 notFinalizedBtn" style="display: none;">
+                <button type="button" class="btn btn-sm btn-warning dropdown-toggle" style="float: right;"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Not finalized
+                </button>
+                <div class="dropdown-menu dropdown-menu-right" data-event="">
+                    <a class="dropdown-item markFinalized" href="javascript:void(0);" target="_self"
+                       onclick="markFinalized(1)">Finalize</a>
+                    <a class="dropdown-item markAndEmail" href="javascript:void(0);" onclick="markAndEmail(1)">Finalize
+                        and send email</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+        <div class="card-body row" style="margin: 20px">
+
+        </div>
+    </div>
+</div>
+<div th:insert="fragments/footer.html :: footer"></div>
+<div th:insert="fragments/popups.html :: newCustomerPopup"></div>
+<div th:insert="fragments/popups.html :: assignNewCarPopup"></div>
+
+<script src="/js/jquery-3.4.0.min.js"></script>
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-popup-overlay/2.1.1/jquery.popupoverlay.min.js"></script>
+<script type="module" src="/js/popups.js"></script>
+<script src="/js/bootstrap-notify.min.js"></script>
+<script src="/js/loadEvents.js"></script>
+
+<script>
+
+    let customerSelect = $("#customerSelect");
+    let carSelect = $("#customerCarSelect");
+
+    function fillCarsForCustomerAudit(id) {
+        $.ajax({
+            url: '/customer-cars/dto',
+            data: {customerId: id},
+            dataType: "json",
+            success: function (data) {
+
+                if (typeof data[0] !== 'object') {
+                    $('#search').prop('disabled', true);
+
+                    carSelect.find('option').remove().end();
+                    carSelect.append($("<option />").val(-1).text($('#customerSelect option:selected').text() + ' has no cars added yet.').prop('disabled', true).prop('selected', true));
+                } else {
+                    $('#search').prop('disabled', false);
+
+                    carSelect.find('option').remove().end();
+                    carSelect.append($("<option />").val(-1).text("All"));
+                    $.each(data, function () {
+                        let carText = this.model + ', ' + this.make + ', ' + this.year + ', ' + this.licensePlate;
+                        carSelect.append($("<option />").val(this.id).text(carText));
+                    });
+                }
+
+            }
+        });
+    }
+
+    $(".date").datepicker({
+        format: "dd/mm/yyyy",
+        autoClose: true,
+        clearBtn: true,
+        weekStart: 1
+    });
+
+
+    $(document).ready(function () {
+
+        fillCustomers();
+
+        function search() {
+            event.preventDefault();
+            let formData = $('#searchCriteria').serialize();
+
+            $('#accordion').empty();
+
+            $.ajax({
+                url: '/r-event/for',
+                data: formData,
+                dataType: "json",
+                success: function (data) {
+                    loadEvents(data);
+                }
+            });
+        }
+
+        $('#search').click(function () {
+            search();
+        });
+
+
+
+        if (window.location.hash === '#newEvent') {
+            $.notify({
+                message: "Successfully created event."
+            }, {
+                type: 'success',
+                allow_dismiss: false,
+                delay: 7000
+            });
+        }
+
+        function fillCustomers() {
+            customerSelect.find('option').remove().end();
+            let customers = $.parseJSON($.ajax({
+                url: '/r-customers/get',
+                dataType: "json",
+                async: false
+            }).responseText);
+
+            $.each(customers, function () {
+                customerSelect.append($("<option />").val(this.id).text(this.name));
+            });
+        }
+
+        customerSelect.change(function () {
+            if (customerSelect.val() !== null) {
+                fillCarsForCustomerAudit(customerSelect.val());
+            }
+        });
+
+
+
+        markFinalized = function (id) {
+
+            $.ajax({
+                url: '/r-event/done?id=' + id,
+                type: 'PUT',
+                success: function () {
+                    search();
+                    $.notify({
+                        message: "Successfully marked as finalized."
+                    }, {
+                        type: 'success',
+                        allow_dismiss: false,
+                        delay: 7000
+                    });
+
+                },
+                error: function () {
+                    $.notify({
+                        message: "Error updating event."
+                    }, {
+                        type: 'danger',
+                        allow_dismiss: false,
+                        delay: 7000
+                    });
+                }
+            });
+
+        };
+
+        markAndEmail = function (id) {
+
+            markFinalized(id);
+            sendEmailWithInvoice(id);
+
+        }
+
+
+
+        $('#regBtn').click(function () {
+            submitNewCustomer();
+            setTimeout(fillCustomers, 3000);
+        });
+
+
+        $('#createCarBtnSave').click(function () {
+            assignNewCar();
+            setTimeout(function () {
+                if ($('#customerSelect').val() !== null) {
+                    fillCarsForCustomerAudit(customerSelect.val());
+                }
+            }, 1000);
+        });
+
+    });
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>DriveSafe CarService</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/navBars.css">
+    <link rel="stylesheet" href="/css/animate.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" type="text/css" href="/css/userPage.css">
+    <link rel="stylesheet" type="text/css" href="/css/popups.css">
+
+    <style>
+       .notFinalizedBtn .dropdown-toggle::after {
+            display:none;
+        }
+    </style>
+
+</head>
+<body>
+<div th:insert="fragments/header.html :: userHeader"></div>
+
+
+<section class="user-page section-padding">
+    <div class="container">
+        <div class="row align-items-stretch">
+            <div class="col-lg-4 col-md-5 col-xs-12">
+                <div class="user-profile-box border-r-7 shadow">
+                    <div class="header clearfix d-flex flex-column align-items-center">
+                        <h2 id="username"><span th:text="${user.getName()}"></span></h2>
+                        <div class="detail clearfix">
+                            <p><span>Email: </span><span th:text="${user.getEmail()}">martygelev@gmail.com</span></p>
+                            <p><span>Phone: </span><span th:text="${user.getPhone()}">1232121</span></p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-8 col-md-7 col-xs-12">
+                <div class="dashborad-box border-r-7 shadow">
+                    <h4 class="title">History</h4>
+                    <div class="section-body">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="item">
+                                    <div class="icon"><span class="g-atteint fa fa-check-circle"></span></div>
+                                    <div class="info">
+                                        <h6 class="number" th:text="${visitsCount}">8</h6>
+                                        <p class="type">times in our service</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="item">
+                                    <div class="icon"><span class="g-alerte fa fa-check-circle"></span></div>
+                                    <div class="info">
+                                        <h6 class="number" th:text="${notFinalizedCount}">2</h6>
+                                        <p class="type">cars in progress</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="item">
+                                    <div class="icon"><span class="g-non-atteint fa fa-check-circle"></span></div>
+                                    <div class="info">
+                                        <h6 class="number" th:text="${visitsCount - notFinalizedCount}">4</h6>
+                                        <p class="type">jobs done</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+
+
+            <div class="dashborad-box border-r-7 col-12 mb-5 shadow">
+                <h4 class="title">Your visits</h4>
+                <div class="section-body">
+                    <div class="dropdown mr-1">
+                        <select class="custom-select mb-4 mt-2" id="customerCarSelect" name="customerCar">
+                            <option selected hidden disabled>Choose a car...</option>
+                        </select>
+
+
+                        <div class="col-12" id="accordion">
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+<div th:insert="fragments/popups.html :: passwordChangePopup"></div>
+<div th:insert="admin/adminIndex.html :: mockCard"></div>
+<script src="/js/jquery-3.4.0.min.js"></script>
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script type="module" src="/js/popups.js"></script>
+<script src="/js/bootstrap-notify.min.js"></script>
+<script src="/js/loadEvents.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-popup-overlay/2.1.1/jquery.popupoverlay.min.js"></script>
+
+<script src="https://static.landbot.io/landbot-widget/landbot-widget-1.0.0.js"></script>
+<script>
+    var myLandbotLivechat = new LandbotLivechat({
+        index: 'https://landbot.io/u/H-171018-CWK0VTD8CLHUZAYK/index.html',
+    });
+</script>
+<script>
+    // Show a proactive message on landbot load
+    myLandbotLivechat.on('landbot-load', () => {
+        myLandbotLivechat.sendProactive("Hello there! ");
+    });
+</script>
+
+<script>
+
+    $(document).ready(function () {
+
+        fillCars();
+
+        function fillCars() {
+
+            $.ajax({
+                url: '/r-customers/cars',
+                type: 'GET',
+                success: function (data) {
+
+                    console.log(data);
+
+                    if (typeof data[0] !== 'object') {
+
+                        $('#customerCarSelect').find('option').remove().end();
+                        $('#customerCarSelect').append($("<option />").val(-1).text('You have no cars added yet.').prop('disabled', true).prop('selected', true));
+                    } else {
+
+                        $('#customerCarSelect').find('option').remove().end();
+                        $('#customerCarSelect').append($("<option />").val(-1).text("All"));
+                        $.each(data, function () {
+                            let carText = this.model + ', ' + this.make + ', ' + this.year + ', ' + this.licensePlate;
+                            $('#customerCarSelect').append($("<option />").val(this.id).text(carText));
+                        });
+                    }
+                }
+            });
+        }
+
+        $('#customerCarSelect').change(function () {
+            $.ajax({
+                url: '/r-event/for',
+                data: {customerCar: $('#customerCarSelect').val()},
+                dataType: "json",
+                success: function (data) {
+
+                    console.log(data);
+                    loadEvents(data);
+
+                    $('#mockCard').find('.notFinalizedBtn')
+                        .css("display", "block")
+                        .find('.dropdown-menu')
+                        .css("display", "none")
+                        .find('.dropdown-toggle');
+
+                }
+            });
+
+        })
+
+
+        $('#passwordChangePopup').popup({
+            transition: 'all 0.3s'
+        });
+
+        let $oldPassword = $('#oldPassword');
+        let $newPassword = $('#newPassword');
+        let $newPassConfirm = $('#confirmPassword');
+
+        $('form :input').keyup(function () {
+            if ($oldPassword.val() === '' || $oldPassword.val().length < 8 || $oldPassword.val().length > 25) {
+                $('#updatePasswordBtn').prop('disabled', true);
+            } else if ($newPassword.val() === '' || $newPassword.val().length < 8 || $newPassword.val().length > 25) {
+                $('#updatePasswordBtn').prop('disabled', true);
+            } else if ($newPassConfirm.val() === '' || $newPassConfirm.val().length < 8 || $newPassConfirm.val().length > 25) {
+                $('#updatePasswordBtn').prop('disabled', true);
+            } else if ($newPassword.val().length !== $newPassConfirm.val().length
+                || $newPassword.val() !== $newPassConfirm.val()) {
+                $('#updatePasswordBtn').prop('disabled', true);
+                console.log('new: ' + $newPassword.val());
+                console.log('new: ' + $newPassConfirm.val());
+            } else {
+                $('#updatePasswordBtn').prop('disabled', false);
+            }
+
+
+        });
+
+        $('#updatePasswordBtn').click(function () {
+
+            $.ajax({
+                type: 'POST',
+                url: '/user/updatePasswordUser',
+                data: {
+                    "newpassword": $newPassword.val(),
+                    "oldpassword": $oldPassword.val()
+                },
+                success: function (data, textStatus, xhr) {
+                    $.ajax({
+                        url: '/logout',
+                        type: 'POST',
+                        success: function () {
+                            location.href = '/login#passChangeSucc';
+                        },
+                        error: function () {
+                            console.log("error pass");
+                        }
+
+                    })
+                },
+                error: function () {
+                    console.log("error pass");
+                }
+
+            })
+
+        })
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+          integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="../../static/css/navBars.css" th:href="@{/css/navBars.css}">
+    <link rel="stylesheet" type="text/css" href="../../static/css/loader.css" th:href="@{/css/loader.css}">
+
+
+    <style>
+
+    </style>
+
+</head>
+<body>
+<div class="d-flex" id="wrapper">
+
+    <div th:insert="fragments/sidebar.html :: sidebar"></div>
+
+    <div id="page-content-wrapper">
+
+        <div th:insert="fragments/header.html :: header"></div>
+
+        <header th:insert="fragments/general.html :: header"></header>
+
+        <button style="border-radius: 20px">Edit car</button>
+        <p th:text="${car.getModel().getManufacturer().getName()}"></p>
+        <p th:text="${car.getModel().getName()}"></p>
+        <p th:text="${car.getVin()}"></p>
+        <p th:text="${car.getLicensePlate()}"></p>
+
+
+    </div>
+</div>
+
+</div>
+<div th:insert="fragments/footer.html :: footer"></div>
+
+<script
+        src="https://code.jquery.com/jquery-3.4.0.js"
+        integrity="sha256-DYZMCC8HTC+QDr5QNaIcfR7VSPtcISykd+6eSmBW5qo="
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="../../static/css/main.css" th:href="@{/css/main.css}">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body>
+<div class="card" th:fragment="card (id, name, email, phone)" style="width: 18rem;float: left;height: 10rem;">
+    <div>
+        <div class="card-body">
+            <a style='position:absolute;top:0;left:0;width:100%;height:100%;display:inline;'th:href="@{'/customers/' + ${id}}"></a>
+            <h5 class="card-title" th:text="${name}">Customer Name</h5>
+            <h6 class="card-subtitle mb-2 text-muted" th:text="${email}">Card subtitle</h6>
+            <p class="card-text" th:text="${phone}">0883444802</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

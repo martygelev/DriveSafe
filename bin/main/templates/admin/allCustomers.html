@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+          integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="../../static/css/navBars.css" th:href="@{/css/navBars.css}">
+</head>
+<body>
+<div id="page">
+    <div class="d-flex" id="wrapper">
+        <div th:insert="fragments/sidebar.html :: sidebar"></div>
+        <div id="page-content-wrapper">
+            <div th:insert="fragments/header.html :: header"></div>
+
+            <button type="button" class="btn btn-info btn-lg center-block popup1_open" data-toggle="modal"
+                    data-target="#mymodal" id="newCustomer">New Customer
+            </button>
+
+            <div class="mainContent row">
+
+                <div class="col" th:each="customer : ${customers}">
+                    <div th:insert="fragments/customerCard.html
+                :: card(id = ${customer.id},name=${customer.name},
+                email=${customer.getEmail()}, phone=${customer.getPhone()})"></div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <div th:insert="fragments/footer.html :: footer"></div>
+    <div th:insert="fragments/popups.html :: newCustomerPopup"></div>
+</div>
+
+
+
+<script
+        src="https://code.jquery.com/jquery-3.4.0.js"
+        integrity="sha256-DYZMCC8HTC+QDr5QNaIcfR7VSPtcISykd+6eSmBW5qo="
+        crossorigin="anonymous"></script>
+
+<script src="js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-popup-overlay/2.1.1/jquery.popupoverlay.min.js"></script>
+<script src="js/bootstrap-notify.min.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+
+        $('#popup1').popup({
+            transition: 'all 0.3s'
+        });
+
+        function regBtn() {
+            const $email = $('#email');
+            const $name = $('#name');
+            const $phone = $('#phone');
+
+            $('#regBtn').on('click', function () {
+                let reg = {
+                    email: $email.val(),
+                    name: $name.val(),
+                    phone: $phone.val()
+                };
+                $.ajax({
+                    type: 'POST',
+                    url: '/customers/register',
+                    data: reg
+                })
+            });
+        }
+    });
+
+</script>
+</body>
+</html>
